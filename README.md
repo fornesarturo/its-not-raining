@@ -6,7 +6,7 @@
 
 # Authors
 * Gerardo Cesar Juarez Lopez
-* 
+* Miguel Angel Montoya Zaragoza ʕ•ᴥ•ʔ
 * 
 * 
 * 
