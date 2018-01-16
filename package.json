@@ -1,0 +1,26 @@
+{
+  "name": "its-not-raining",
+  "version": "1.0.0",
+  "description": "Browser-based game",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fornesarturo/its-not-raining.git"
+  },
+  "keywords": [
+    "game"
+  ],
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/fornesarturo/its-not-raining/issues"
+  },
+  "homepage": "https://github.com/fornesarturo/its-not-raining#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "http": "0.0.0"
+  }
+}
