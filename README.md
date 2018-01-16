@@ -1,5 +1,6 @@
 # It's not raining
 *A browser-based game.*
+You can play the game here, in [heroku](https://its-not-raining.herokuapp.com/).
 
 ## Table of Contents
 * [Built with](#built-with)
