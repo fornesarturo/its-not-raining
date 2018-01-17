@@ -16,12 +16,12 @@ var walled, grounded, direction, waitForMovement;
 
 function setup() {
     createCanvas(1800, 600);
-    player = createSprite(400, 200, 50, 50);
+    player = createSprite(300, 200, 50, 50);
     ground = createSprite(400, 600, 1800, 100);
     walls = Group();
 
     let wallA = createSprite(50, 300, 100, 500);
-    let wallB = createSprite(350, 300, 100, 500);
+    let wallB = createSprite(450, 300, 100, 500);
     walls.add(wallA);
     walls.add(wallB);
     walled = false;
@@ -41,16 +41,22 @@ function draw() {
     if (keyDown("left")) {
         if (!waitForMovement)
             player.velocity.x = -SPEED;
+        if (direction > 0 && walled)
+            walled = false;
     }
     if (keyDown("right")) {
         if (!waitForMovement)
             player.velocity.x = SPEED;
+        if (direction < 0 && walled)
+            walled = false;
     }
 
     // Stop Movement.
     if (keyWentUp("left") || keyWentUp("right")) {
-        if (!waitForMovement)
+        if (!waitForMovement) {
             player.velocity.x = 0;
+            walled = false;
+        }
     }
     
     player.collide(ground, function(a, b) {
