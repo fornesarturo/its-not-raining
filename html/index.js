@@ -47,7 +47,8 @@ function draw() {
 
     // Stop Movement.
     if (keyWentUp("left") || keyWentUp("right")) {
-        player.velocity.x = 0;
+        if (!waitForMovement)
+            player.velocity.x = 0;
     }
     
     player.collide(ground, function(a, b) {
