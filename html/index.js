@@ -46,7 +46,7 @@ function draw() {
     }
 
     // Stop Movement.
-    if (keyWentUp("left") || keyWentDown("right")) {
+    if (keyWentUp("left") || keyWentUp("right")) {
         player.velocity.x = 0;
     }
     
