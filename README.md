@@ -42,10 +42,10 @@ $ npm install
 And run the project . . .
 
 ```bash
-# with vanilla node
-$ node app.js
-# with nodemon
-$ nodemon app.js
+# with vanilla node and npm
+$ npm start
+# and to run tests
+$ npm test
 ```
 
 ## License
