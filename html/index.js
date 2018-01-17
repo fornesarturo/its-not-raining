@@ -76,7 +76,7 @@ function draw() {
             }
             setTimeout(function () {
                 waitForMovement = false;
-            }, 100);
+            }, 150);
         } else if (grounded) {
             player.velocity.y = -JUMP;
             grounded = false;
