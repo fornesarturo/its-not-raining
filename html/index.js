@@ -68,9 +68,13 @@ function draw() {
     }
 
     player.collide(walls, function(sprite, target) {
-        walled = true;
-        player.velocity.y = WALL_GRAB;
-        direction = target.position.x - sprite.position.x;
+        if (sprite.touching.left || sprite.touching.right) {
+            walled = true;
+            player.velocity.y = WALL_GRAB;
+            direction = target.position.x - sprite.position.x;
+        }
+        else if (sprite.touching.bottom)
+            grounded = true;
     });
 
     if (keyWentDown("space")) {
@@ -90,6 +94,6 @@ function draw() {
             grounded = false;
         }
     }
-
+    player.debug = mouseIsPressed;
     drawSprites();
 }
