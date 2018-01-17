@@ -21,9 +21,11 @@ function setup() {
     walls = Group();
 
     let wallA = createSprite(50, 300, 100, 500);
-    let wallB = createSprite(450, 300, 100, 500);
+    let wallB = createSprite(400, 300, 100, 500);
+    let wallC = createSprite(750, 300, 100, 500);
     walls.add(wallA);
     walls.add(wallB);
+    walls.add(wallC);
     walled = false;
     grounded = false;
     waitForMovement = false;
@@ -63,19 +65,20 @@ function draw() {
         grounded = true;
     });
 
-    if (!grounded) {
-        player.velocity.y += GRAVITY;
-    }
-
     player.collide(walls, function(sprite, target) {
-        if (sprite.touching.left || sprite.touching.right) {
+        if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
             walled = true;
             player.velocity.y = WALL_GRAB;
             direction = target.position.x - sprite.position.x;
+            grounded = false;
         }
         else if (sprite.touching.bottom)
             grounded = true;
     });
+
+    if (!grounded) {
+        player.velocity.y += GRAVITY;
+    }
 
     if (keyWentDown("space")) {
         if(walled && !grounded) {
