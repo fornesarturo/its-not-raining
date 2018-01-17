@@ -72,15 +72,13 @@ function draw() {
             walled = false;
             waitForMovement = true;
             if (direction < 0) {
-                player.velocity.y = -JUMP;
-                player.velocity.x = SPEED;
+                player.setSpeed(20, -55);
             } else {
-                player.velocity.y = -JUMP;
-                player.velocity.x = -SPEED;
+                player.setSpeed(20, -125);
             }
             setTimeout(function () {
                 waitForMovement = false;
-            }, 150);
+            }, 200);
         } else if (grounded) {
             player.velocity.y = -JUMP;
             grounded = false;
