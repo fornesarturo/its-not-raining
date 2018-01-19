@@ -8,7 +8,7 @@ var gameRouter = express.Router();
 // var apiRouter = express.Router();
 
 // app.use('/api', apiRouter);
-app.use(express.static('html'))
+app.use(express.static('html'));
 app.use('/', gameRouter);
 
 gameRouter.route('/')
