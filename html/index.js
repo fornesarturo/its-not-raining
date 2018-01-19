@@ -8,7 +8,10 @@ const WALL_GRAB = 2;
 var mySprite;
 
 // Structures.
-var ground, walls;
+var walls;
+
+// Obstacles and enemies
+var obstacles;
 
 var collidingWall;
 
@@ -17,20 +20,36 @@ var walled, grounded, direction, waitForMovement;
 function setup() {
     createCanvas(1800, 600);
     player = createSprite(300, 200, 50, 50);
-    ground = createSprite(400, 600, 1800, 100);
     walls = Group();
+    obstacles = Group();
 
-    let wallA = createSprite(50, 300, 100, 500);
-    let wallB = createSprite(400, 300, 100, 500);
-    let wallC = createSprite(750, 300, 100, 500);
-    walls.add(wallA);
-    walls.add(wallB);
-    walls.add(wallC);
     walled = false;
     grounded = false;
     waitForMovement = false;
 
+    reset();
+
     player.velocity.x = 0;
+}
+
+function reset() {
+
+    // Enemies and obstacles setup
+    let obst1 = createSprite(500, 500, 50, 50);
+    obst1.shapeColor = color(255);
+    obstacles.add(obst1);
+
+    let wallA = createSprite(50, 300, 100, 500);
+    let wallB = createSprite(400, 300, 100, 500);
+    let wallC = createSprite(750, 300, 100, 500);
+    let ground = createSprite(400, 600, 1800, 100);
+    walls.add(wallA);
+    walls.add(wallB);
+    walls.add(wallC);
+    walls.add(ground);
+
+    player.position.x = 300;
+    player.position.y = 200;
 }
 
 function draw() {
@@ -61,10 +80,6 @@ function draw() {
         }
     }
     
-    player.collide(ground, function(a, b) {
-        grounded = true;
-    });
-
     player.collide(walls, function(sprite, target) {
         if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
             walled = true;
@@ -97,6 +112,18 @@ function draw() {
             grounded = false;
         }
     }
+
+    // Obstacles interactions
+    if ( player.overlap(obstacles) ) {
+        restartLevel();
+    }
+
     player.debug = mouseIsPressed;
     drawSprites();
+}
+
+function restartLevel() {
+    walls.removeSprites();
+    obstacles.removeSprites();
+    reset();
 }
