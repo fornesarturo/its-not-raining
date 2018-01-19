@@ -3,6 +3,8 @@ const SPEED = 7;
 const GRAVITY = 1;
 const JUMP = 15;
 const WALL_GRAB = 2;
+const WIDTH = 1800;
+const HEIGHT = 600;
 
 // Sprites.
 var mySprite;
@@ -16,7 +18,7 @@ var collidingWall;
 var walled, grounded, direction, waitForMovement;
 
 function setup() {
-    createCanvas(1800, 600);
+    createCanvas(WIDTH, HEIGHT);
     player = createSprite(300, 200, 50, 50);
     ground = createSprite(400, 600, 1800, 100);
     walls = Group();
@@ -102,9 +104,16 @@ function draw() {
     }
 
     if(end.overlap(player)){
-        console.log("END");
+        levelEnd();
     }
 
     player.debug = mouseIsPressed;
     drawSprites();
+}
+
+function levelEnd(){
+    textSize(60);
+    fill(255, 255, 255);
+    text("GAME OVER", WIDTH / 2, HEIGHT / 2);
+    updateSprites(false);
 }
