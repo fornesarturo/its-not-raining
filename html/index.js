@@ -9,6 +9,7 @@ var mySprite;
 
 // Structures.
 var ground, walls;
+var end;
 
 var collidingWall;
 
@@ -29,6 +30,8 @@ function setup() {
     walled = false;
     grounded = false;
     waitForMovement = false;
+
+    end = createSprite(1200, 500, 50, 50);
 
     player.velocity.x = 0;
 }
@@ -97,6 +100,11 @@ function draw() {
             grounded = false;
         }
     }
+
+    if(end.overlap(player)){
+        console.log("END");
+    }
+
     player.debug = mouseIsPressed;
     drawSprites();
 }
