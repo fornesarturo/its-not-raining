@@ -3,12 +3,14 @@ const SPEED = 7;
 const GRAVITY = 1;
 const JUMP = 15;
 const WALL_GRAB = 2;
+const WIDTH = 1800;
+const HEIGHT = 600;
 
 // Sprites.
-var mySprite;
+var player;
 
 // Structures.
-var walls;
+var walls, end;
 
 // Obstacles and enemies
 var obstacles;
@@ -18,14 +20,10 @@ var collidingWall;
 var walled, grounded, direction, waitForMovement;
 
 function setup() {
-    createCanvas(1800, 600);
+    createCanvas(WIDTH, HEIGHT);
     player = createSprite(300, 200, 50, 50);
     walls = Group();
     obstacles = Group();
-
-    walled = false;
-    grounded = false;
-    waitForMovement = false;
 
     reset();
 
@@ -47,6 +45,12 @@ function reset() {
     walls.add(wallB);
     walls.add(wallC);
     walls.add(ground);
+
+    end = createSprite(1200, 500, 50, 50);
+
+    walled = false;
+    grounded = false;
+    waitForMovement = false;
 
     player.position.x = 300;
     player.position.y = 200;
@@ -96,7 +100,7 @@ function draw() {
     }
 
     if (keyWentDown("space")) {
-        if(walled && !grounded) {
+        if (walled && !grounded) {
             walled = false;
             waitForMovement = true;
             if (direction < 0) {
@@ -114,8 +118,12 @@ function draw() {
     }
 
     // Obstacles interactions
-    if ( player.overlap(obstacles) ) {
+    if (player.overlap(obstacles)) {
         restartLevel();
+    }
+
+    if (end.overlap(player)) {
+        levelEnd();
     }
 
     player.debug = mouseIsPressed;
@@ -126,4 +134,11 @@ function restartLevel() {
     walls.removeSprites();
     obstacles.removeSprites();
     reset();
+}
+
+function levelEnd() {
+    textSize(60);
+    fill(255, 255, 255);
+    text("GAME OVER", WIDTH / 2, HEIGHT / 2);
+    updateSprites(false);
 }
