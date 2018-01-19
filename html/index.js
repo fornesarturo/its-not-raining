@@ -141,4 +141,18 @@ function levelEnd() {
     fill(255, 255, 255);
     text("GAME OVER", WIDTH / 2, HEIGHT / 2);
     updateSprites(false);
+    let data = {"id": 1};
+    httpPost(
+        "/",
+        'json',
+        data,
+        function(result) {
+            let jsonLevel = JSON.parse(result);
+            fill(0, 0, 0);
+            text("Done with JSON Level: \n" + JSON.stringify(jsonLevel), WIDTH / 4, HEIGHT / 4);
+        },
+        function(error) {
+            console.log(error);
+        }
+    )
 }
