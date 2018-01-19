@@ -3,34 +3,57 @@ const SPEED = 7;
 const GRAVITY = 1;
 const JUMP = 15;
 const WALL_GRAB = 2;
+const WIDTH = 1800;
+const HEIGHT = 600;
 
 // Sprites.
-var mySprite;
+var player;
 
 // Structures.
-var ground, walls;
+var walls, end;
+
+// Obstacles and enemies
+var obstacles;
 
 var collidingWall;
 
 var walled, grounded, direction, waitForMovement;
 
 function setup() {
-    createCanvas(1800, 600);
+    createCanvas(WIDTH, HEIGHT);
     player = createSprite(300, 200, 50, 50);
-    ground = createSprite(400, 600, 1800, 100);
     walls = Group();
+    obstacles = Group();
+
+    reset();
+
+    player.velocity.x = 0;
+}
+
+function reset() {
+
+    // Enemies and obstacles setup
+    let obst1 = createSprite(500, 500, 50, 50);
+    obst1.shapeColor = color(255);
+    obstacles.add(obst1);
 
     let wallA = createSprite(50, 300, 100, 500);
     let wallB = createSprite(400, 300, 100, 500);
     let wallC = createSprite(750, 300, 100, 500);
+    let ground = createSprite(400, 600, 1800, 100);
     walls.add(wallA);
     walls.add(wallB);
     walls.add(wallC);
+    walls.add(ground);
+
+    end = createSprite(1200, 500, 50, 50);
+
     walled = false;
     grounded = false;
     waitForMovement = false;
 
-    player.velocity.x = 0;
+    player.position.x = 300;
+    player.position.y = 200;
 }
 
 function draw() {
@@ -61,10 +84,6 @@ function draw() {
         }
     }
     
-    player.collide(ground, function(a, b) {
-        grounded = true;
-    });
-
     player.collide(walls, function(sprite, target) {
         if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
             walled = true;
@@ -81,7 +100,7 @@ function draw() {
     }
 
     if (keyWentDown("space")) {
-        if(walled && !grounded) {
+        if (walled && !grounded) {
             walled = false;
             waitForMovement = true;
             if (direction < 0) {
@@ -97,6 +116,29 @@ function draw() {
             grounded = false;
         }
     }
+
+    // Obstacles interactions
+    if (player.overlap(obstacles)) {
+        restartLevel();
+    }
+
+    if (end.overlap(player)) {
+        levelEnd();
+    }
+
     player.debug = mouseIsPressed;
     drawSprites();
+}
+
+function restartLevel() {
+    walls.removeSprites();
+    obstacles.removeSprites();
+    reset();
+}
+
+function levelEnd() {
+    textSize(60);
+    fill(255, 255, 255);
+    text("GAME OVER", WIDTH / 2, HEIGHT / 2);
+    updateSprites(false);
 }
