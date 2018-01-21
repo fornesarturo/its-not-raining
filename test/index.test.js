@@ -9,7 +9,18 @@ chai.use(chaiHttp);
 
 describe("Testing Category", () => {
     it("Test", () => {
-        chai.request('http://localhost:1337')
+        chai.request('http://localhost')
             .get('/')
+            .end(function(err, res) {
+                expect(res).to.have.status(200);
+                done();
+            });
+    });
+    it("Test 2", () => {
+        chai.request('http://localhost')
+            .get('/')
+            .end(function(err, res) {
+                expect(res).to.have.status(200);
+            });
     });
 });

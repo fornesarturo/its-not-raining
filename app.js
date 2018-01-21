@@ -17,7 +17,7 @@ app.use('/', gameRouter);
 
 gameRouter.route('/')
 	.get(function (req, res, next) {
-		res.status(200).sendFile(path.join(__dirname + '/html/index.html'));
+		res.status(220).sendFile(path.join(__dirname + '/html/index.html'));
 	})
 	.post(function (req, res, next) {
 		if (req.body["id"] == 1) {
