@@ -6,6 +6,11 @@ const WALL_GRAB = 2;
 const WIDTH = 1800;
 const HEIGHT = 600;
 
+// Time
+var timeStart, timeEnd;
+
+var levelEnded;
+
 // Sprites.
 var player;
 
@@ -54,6 +59,11 @@ function reset() {
 
     player.position.x = 300;
     player.position.y = 200;
+
+    levelEnded = false;
+
+    timeStart = new Date();
+    timeEnd = new Date();
 }
 
 function draw() {
@@ -128,6 +138,20 @@ function draw() {
 
     player.debug = mouseIsPressed;
     drawSprites();
+    
+    if(!levelEnded)
+        timeEnd = new Date();
+    updateTimer();
+}
+
+function updateTimer(){
+    let timer = timeEnd - timeStart;
+    let seconds = Math.floor((timer) / 1000);
+    let ms = Math.floor(timer % 1000);
+    // Add timer
+    textSize(60);
+    fill(255, 255, 255);
+    text(seconds + "." + ms , WIDTH * (3/4), HEIGHT / 4);
 }
 
 function restartLevel() {
@@ -137,6 +161,7 @@ function restartLevel() {
 }
 
 function levelEnd() {
+    levelEnded = true;
     textSize(60);
     fill(255, 255, 255);
     text("GAME OVER", WIDTH / 2, HEIGHT / 2);
