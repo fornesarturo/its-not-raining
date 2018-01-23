@@ -53,6 +53,7 @@ function reset() {
     };
     obstacles.add(obst1);
 
+    // Setup all obstacles
     for(let i = 0; i < obstacles.length; ++i){
         obstacles[i].setupFunc(obstacles[i]);
     }
@@ -139,6 +140,7 @@ function draw() {
         }
     }
 
+    // Update obstacles
     for(let i = 0; i < obstacles.length; ++i){
         obstacles[i].behaviourFunc(obstacles[i]);
     }
