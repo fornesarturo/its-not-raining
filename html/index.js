@@ -43,7 +43,19 @@ function reset() {
     // Enemies and obstacles setup
     let obst1 = createSprite(500, 500, 50, 50);
     obst1.shapeColor = color(255);
+    obst1.setupFunc = (obst) => {
+        obst.velocity.x = 5;
+    };
+    obst1.behaviourFunc = (obst) => {
+        obst.collide(walls, function(sprite, target) {
+            sprite.velocity.x *= -1;
+        });
+    };
     obstacles.add(obst1);
+
+    for(let i = 0; i < obstacles.length; ++i){
+        obstacles[i].setupFunc(obstacles[i]);
+    }
 
     let wallA = createSprite(50, 300, 100, 500);
     let wallB = createSprite(400, 300, 100, 500);
@@ -125,6 +137,10 @@ function draw() {
             player.velocity.y = -JUMP;
             grounded = false;
         }
+    }
+
+    for(let i = 0; i < obstacles.length; ++i){
+        obstacles[i].behaviourFunc(obstacles[i]);
     }
 
     // Obstacles interactions
