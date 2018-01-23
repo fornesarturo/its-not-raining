@@ -1,26 +1,28 @@
-const chai = require("chai");
-const chaiHttp = require("chai-http")
-const path = require('path');
+'use strict';
+
+var chai = require("chai");
+const request = require('supertest');
 // const nock = require("nock");
-// var request = require('supertest')("http://api.postcodes.io");
-const app = require(__dirname + "/../app.js");
-chai.use(chaiHttp);
 
+const app = require("../app");
 
-describe("Testing Category", () => {
-    it("Test", () => {
-        chai.request('http://localhost')
-            .get('/')
-            .end(function(err, res) {
-                expect(res).to.have.status(200);
-                done();
-            });
+var expect = chai.expect;
+
+describe('API Integration Tests', function() {
+    it('Should pass GET at /', function(done) { 
+        request(app).get('/')
+        .end(function(err, res) { 
+            expect(res.statusCode).to.equal(200); 
+            done(); 
+        });
     });
-    it("Test 2", () => {
-        chai.request('http://localhost')
-            .get('/')
-            .end(function(err, res) {
-                expect(res).to.have.status(200);
-            });
+    it('Should pass POST at /', function(done) {  
+        request(app).post('/')
+        .send({"id": 1})
+        .end(function(err, res) { 
+            expect(res.statusCode).to.equal(200);
+            expect(res.body).to.include.keys("player", "structures", "structures", "end");
+            done(); 
+        }); 
     });
 });
