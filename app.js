@@ -47,3 +47,5 @@ gameRouter.route('/')
 app.listen(PORT, function () {
 	console.log("Listening on port 1337 . . .");
 });
+
+module.exports = app;
