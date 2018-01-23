@@ -33,6 +33,9 @@ function setup() {
     reset();
 
     player.velocity.x = 0;
+
+    timeStart = new Date();
+    timeEnd = new Date();
 }
 
 function reset() {
@@ -61,9 +64,6 @@ function reset() {
     player.position.y = 200;
 
     levelEnded = false;
-
-    timeStart = new Date();
-    timeEnd = new Date();
 }
 
 function draw() {
