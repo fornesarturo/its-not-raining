@@ -16,8 +16,8 @@ describe('API Integration Tests', function() {
             done(); 
         });
     });
-    it('Should pass POST at /', function(done) {  
-        request(app).post('/')
+    it('Should pass POST at /getLevel', function(done) {  
+        request(app).post('/getLevel')
         .send({"id": 1})
         .end(function(err, res) { 
             expect(res.statusCode).to.equal(200);
