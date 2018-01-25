@@ -52,13 +52,32 @@ function loadLevel(data) {
     };
     fetch("/getLevel", options)
     .then(res => res.json())
-    .then(res => reset(res));
+    .then(resJSON => reset(resJSON));
 }
 
 function reset(res) {
 
     console.log(res);
+    
+    // Enemies and obstacles setup
+    let obst1 = createSprite(500, 500, 50, 50);
+    obst1.shapeColor = color(255);
+    obst1.setupFunc = (obst) => {
+        obst.velocity.x = 5;
+    };
+    obst1.behaviourFunc = (obst) => {
+        obst.collide(walls, function(sprite, target) {
+            sprite.velocity.x *= -1;
+        });
+    };
+    obstacles.add(obst1);
 
+    // Setup all obstacles
+    for(let i = 0; i < obstacles.length; ++i){
+        obstacles[i].setupFunc(obstacles[i]);
+    }
+
+    // Build from request response.
     for(var key in res) {
         if(res.hasOwnProperty(key)) {
             if(key == "end") {
@@ -164,6 +183,11 @@ function draw() {
         // Obstacles interactions
         if (player.overlap(obstacles)) {
             restartLevel();
+        }
+
+        // Update obstacles
+        for(let i = 0; i < obstacles.length; ++i){
+            obstacles[i].behaviourFunc(obstacles[i]);
         }
 
         if (end.overlap(player)) {
