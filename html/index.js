@@ -56,8 +56,6 @@ function loadLevel(data) {
 
 function reset(res) {
 
-    console.log(res);
-
     // Build from request response.
     for(var key in res) {
         if(res.hasOwnProperty(key)) {
@@ -210,6 +208,7 @@ function updateTimer(){
 function restartLevel() {
     walls.removeSprites();
     obstacles.removeSprites();
+    clearSprites();
     let data = { "id" : levelId };
     loadLevel(data);
 }
@@ -220,10 +219,19 @@ function levelEnd() {
     fill(255, 255, 255);
     text("GAME OVER", WIDTH / 2, HEIGHT / 2);
     updateSprites(false);
-    walls.removeSprites();
-    obstacles.removeSprites();
-
+    clearSprites();
     let data = { "id" : levelId};
     // let data = { "id" : ++levelId };
     loadLevel(data);
+}
+
+function clearSprites() {
+    walls.removeSprites();
+    obstacles.removeSprites();
+    while (walls.length > 0) {
+        walls[0].remove();
+    }
+    while (obstacles.length > 0) {
+        obstacles[0].remove();
+    }
 }
