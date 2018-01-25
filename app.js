@@ -16,10 +16,13 @@ app.use(express.static('html'))
 app.use('/', gameRouter);
 
 gameRouter.route('/')
-	.get(function (req, res, next) {
+	.get(function(req, res, next) {
 		res.status(200).sendFile(path.join(__dirname + '/html/index.html'));
-	})
+	});
+gameRouter.route('/getLevel')
 	.post(function (req, res, next) {
+		console.log("REQUESTING");
+		console.log(req.body);
 		if (req.body["id"] == 1) {
 			let level = {
 				"player": [
@@ -41,7 +44,7 @@ gameRouter.route('/')
 
 			res.json(level);
 		} else
-			res.json(req.body);
+			res.json({});
 	});
 
 app.listen(PORT, function () {
