@@ -6,10 +6,10 @@ const WALL_GRAB = 2;
 const WIDTH = 1800;
 const HEIGHT = 600;
 
-// Level loaded flag
-var levelLoaded
+// Level loading.
+var levelLoaded, levelId;
 
-// Time
+// Time.
 var timeStart, timeEnd;
 
 var levelEnded;
@@ -28,14 +28,13 @@ var collidingWall;
 var walled, grounded, direction, waitForMovement;
 
 function setup() {
-
     createCanvas(WIDTH, HEIGHT);
-    player = createSprite(300, 200, 50, 50);
+    player = createSprite(300, 200, 25, 25);
     walls = Group();
     obstacles = Group();
-
+    levelId = 1;
     levelLoaded = false;
-    let data = {"id" : 1};
+    let data = { "id" : levelId };
     loadLevel(data);
 }
 
@@ -70,11 +69,11 @@ function reset(res) {
                 var obstaclesJSON = res[key][0];
                 let obst = createSprite(obstaclesJSON[0], obstaclesJSON[1], obstaclesJSON[2], obstaclesJSON[3]);
                 obst.shapeColor = color(255);
-                obst.setupFunc = (obstF) => {
-                    obstF.velocity.x = 5;
+                obst.setupFunc = (o) => {
+                    o.velocity.x = 5;
                 };
-                obst.behaviourFunc = (obstF) => {
-                    obstF.collide(walls, function(sprite, target) {
+                obst.behaviourFunc = (o) => {
+                    o.collide(walls, function(sprite, target) {
                         sprite.velocity.x *= -1;
                     });
                 };
@@ -97,6 +96,10 @@ function reset(res) {
         }
     }
 
+    for(let i = 0; i < obstacles.length; i++) {
+        obstacles[i].setupFunc(obstacles[i]);
+    }
+
     walled = false;
     grounded = false;
     waitForMovement = false;
@@ -105,6 +108,7 @@ function reset(res) {
     timeStart = new Date();
     timeEnd = new Date();
     levelLoaded = true;
+    updateSprites(true);
 }
 
 function draw() {
@@ -176,7 +180,7 @@ function draw() {
         }
 
         // Update obstacles
-        for(let i = 0; i < obstacles.length; ++i){
+        for(let i = 0; i < obstacles.length; i++){
             obstacles[i].behaviourFunc(obstacles[i]);
         }
 
@@ -206,7 +210,7 @@ function updateTimer(){
 function restartLevel() {
     walls.removeSprites();
     obstacles.removeSprites();
-    let data = {"id": 1};
+    let data = { "id" : levelId };
     loadLevel(data);
 }
 
@@ -216,6 +220,10 @@ function levelEnd() {
     fill(255, 255, 255);
     text("GAME OVER", WIDTH / 2, HEIGHT / 2);
     updateSprites(false);
-    let data = {"id": 1};
-    loadLevel(data)
+    walls.removeSprites();
+    obstacles.removeSprites();
+
+    let data = { "id" : levelId};
+    // let data = { "id" : ++levelId };
+    loadLevel(data);
 }
