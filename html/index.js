@@ -58,24 +58,6 @@ function loadLevel(data) {
 function reset(res) {
 
     console.log(res);
-    
-    // Enemies and obstacles setup
-    let obst1 = createSprite(500, 500, 50, 50);
-    obst1.shapeColor = color(255);
-    obst1.setupFunc = (obst) => {
-        obst.velocity.x = 5;
-    };
-    obst1.behaviourFunc = (obst) => {
-        obst.collide(walls, function(sprite, target) {
-            sprite.velocity.x *= -1;
-        });
-    };
-    obstacles.add(obst1);
-
-    // Setup all obstacles
-    for(let i = 0; i < obstacles.length; ++i){
-        obstacles[i].setupFunc(obstacles[i]);
-    }
 
     // Build from request response.
     for(var key in res) {
@@ -88,6 +70,14 @@ function reset(res) {
                 var obstaclesJSON = res[key][0];
                 let obst = createSprite(obstaclesJSON[0], obstaclesJSON[1], obstaclesJSON[2], obstaclesJSON[3]);
                 obst.shapeColor = color(255);
+                obst.setupFunc = (obstF) => {
+                    obstF.velocity.x = 5;
+                };
+                obst.behaviourFunc = (obstF) => {
+                    obstF.collide(walls, function(sprite, target) {
+                        sprite.velocity.x *= -1;
+                    });
+                };
                 obstacles.add(obst);
             }
             else if(key == "structures") {
