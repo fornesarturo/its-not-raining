@@ -26,7 +26,7 @@ gameRouter.route('/getLevel')
 		if (req.body["id"] == 1) {
 			let level = {
 				"player": [
-					[300, 200]
+					[300, 400]
 				],
 				"structures": [
 					[50, 300, 100, 500],

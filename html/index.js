@@ -114,6 +114,8 @@ function draw() {
 
     if(levelLoaded) {
 
+        // console.log(walled, grounded, direction, waitForMovement);
+
         if (!waitForMovement)
             player.velocity.x = 0;
 
@@ -146,11 +148,14 @@ function draw() {
                 direction = target.position.x - sprite.position.x;
                 grounded = false;
             }
-            else if (sprite.touching.bottom)
+            else if (sprite.touching.bottom){
                 grounded = true;
+                // player.velocity.y = 0;
+            }
         });
 
-        if (!grounded) {
+
+        if (!grounded && player.velocity.y <= 17) {
             player.velocity.y += GRAVITY;
         }
 
