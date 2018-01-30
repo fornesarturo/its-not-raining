@@ -3,8 +3,11 @@ const SPEED = 7;
 const GRAVITY = 1;
 const JUMP = 15;
 const WALL_GRAB = 2;
-const WIDTH = 800;
-const HEIGHT = 800;
+const WIDTH = 900;
+const HEIGHT = 900;
+// Margin
+const leftWall = 0;
+const rightWall = 899;
 
 // Level loading.
 var levelLoaded, levelId;
@@ -22,8 +25,6 @@ var walls, end;
 
 // Obstacles and enemies
 var obstacles;
-
-var collidingWall;
 
 var walled, grounded, direction, waitForMovement;
 
@@ -115,6 +116,8 @@ function reset(res) {
 
 function draw() {
     background(0, 0, 0);
+    //line(leftWall, 0, leftWall, HEIGHT);
+    //line(rightWall, 0, rightWall, HEIGHT);
 
     if(levelLoaded) {
 
@@ -122,6 +125,14 @@ function draw() {
 
         if (!waitForMovement)
             player.velocity.x = 0;
+        
+        // Restric position outside of canvas
+        if (player.position.x <= 0) {
+            player.position.x = 2;
+        }
+        if (player.position.x >= WIDTH - 1) {
+            player.position.x = WIDTH - 2;
+        }
 
         // Basic Movement.
         if (keyDown("left")) {
