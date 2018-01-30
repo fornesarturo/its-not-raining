@@ -64,18 +64,22 @@ function reset(res) {
                 end = createSprite(endJSON[0], endJSON[1], endJSON[2], endJSON[3]);
             }
             else if(key == "obstacles") {
-                var obstaclesJSON = res[key][0];
-                let obst = createSprite(obstaclesJSON[0], obstaclesJSON[1], obstaclesJSON[2], obstaclesJSON[3]);
-                obst.shapeColor = color(255);
-                obst.setupFunc = (o) => {
-                    o.velocity.x = 5;
-                };
-                obst.behaviourFunc = (o) => {
-                    o.collide(walls, function(sprite, target) {
-                        sprite.velocity.x *= -1;
-                    });
-                };
-                obstacles.add(obst);
+                var obstaclesJSON = res[key];
+                var l = obstaclesJSON.length;
+                for(var i = 0; i < l; i++) {
+                    index = obstaclesJSON[i]
+                    let obst = createSprite(index[0], index[1], index[2], index[3]);
+                    obst.shapeColor = color(255);
+                    obst.setupFunc = (o) => {
+                        o.velocity.x = 5;
+                    };
+                    obst.behaviourFunc = (o) => {
+                        o.collide(walls, function(sprite, target) {
+                            sprite.velocity.x *= -1;
+                        });
+                    };
+                    obstacles.add(obst);
+                }
             }
             else if(key == "structures") {
                 var structuresJSON = res[key];

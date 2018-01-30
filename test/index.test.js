@@ -16,7 +16,7 @@ describe('API Integration Tests', function() {
             done(); 
         });
     });
-    it('Should pass POST at /getLevel', function(done) {  
+    it('Should pass POST at /getLevel and JSON must have proper data', function(done) {  
         request(app).post('/getLevel')
         .send({"id": 1})
         .end(function(err, res) { 
