@@ -32,7 +32,7 @@ function setup() {
     player = createSprite(300, 200, 25, 25);
     walls = Group();
     obstacles = Group();
-    levelId = 1;
+    levelId = -1;
     levelLoaded = false;
     let data = { "id" : levelId };
     loadLevel(data);

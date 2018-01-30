@@ -1,7 +1,9 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-
+const dotenv = require('dotenv').config();
+const mongoURL = "mongodb://" + process.env.MLAB_USER + ":" + process.env.MLAB_PASS + "@ds046867.mlab.com:46867/its-not-raining";
+const mLab = require('mongolab-data-api')(process.env.MLAB_KEY);
 const app = express();
 const PORT = process.env.PORT || 1337;
 
@@ -9,9 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 var gameRouter = express.Router();
-// var apiRouter = express.Router();
 
-// app.use('/api', apiRouter);
 app.use(express.static('html'))
 app.use('/', gameRouter);
 
@@ -23,32 +23,31 @@ gameRouter.route('/getLevel')
 	.post(function (req, res, next) {
 		console.log("REQUESTING");
 		console.log(req.body);
-		if (req.body["id"] == 1) {
-			let level = {
-				"player": [
-					[300, 400]
-				],
-				"structures": [
-					[50, 300, 100, 500],
-					[400, 300, 100, 500],
-					[750, 300, 100, 500],
-					[400, 600, 1800, 100]
-				],
-				"obstacles": [
-					[500, 500, 50, 50]
-				],
-				"end": [
-					[1200, 500, 50, 50]
-				]
-			}
-
+		if (req.body["id"] >= 0) {
+			let level = getLevel(req.body["id"]);
 			res.json(level);
-		} else
-			res.json({});
+		} 
+		else {
+			let level = getLevel(-1);
+			res.json(level);
+		}
 	});
 
 app.listen(PORT, function () {
 	console.log("Listening on port 1337 . . .");
 });
+
+function getLevel(id) {
+	let level;
+	var optionsDB = {
+        database: 'its-not-raining',
+		collectionName: 'levels',
+		query: '{"id": ' + id + '}',
+    };
+    mLab.listDocuments(optionsDB, function (err, collections) {
+		level = collections[0];
+	});
+	return level;
+}
 
 module.exports = app;
