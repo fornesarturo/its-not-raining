@@ -3,8 +3,8 @@ const SPEED = 7;
 const GRAVITY = 1;
 const JUMP = 15;
 const WALL_GRAB = 2;
-const WIDTH = 1800;
-const HEIGHT = 600;
+const WIDTH = 800;
+const HEIGHT = 800;
 
 // Level loading.
 var levelLoaded, levelId;
