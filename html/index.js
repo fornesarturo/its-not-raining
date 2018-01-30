@@ -22,7 +22,7 @@ var walls, end;
 
 // Obstacles and enemies
 var obstacles;
-
+//
 var collidingWall;
 
 var walled, grounded, direction, waitForMovement;
