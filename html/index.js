@@ -11,22 +11,17 @@ const rightWall = 899;
 
 // Level loading.
 var levelLoaded, levelId;
-
 // Time.
 var timeStart, timeEnd;
-
-var levelEnded;
-
 // Sprites.
 var player;
-
 // Structures.
 var walls, end;
-
 // Obstacles and enemies
 var obstacles;
-
+// Flags
 var walled, grounded, direction, waitForMovement;
+var levelEnded;
 
 function setup() {
     createCanvas(WIDTH, HEIGHT);
@@ -127,11 +122,11 @@ function draw() {
             player.velocity.x = 0;
         
         // Restric position outside of canvas
-        if (player.position.x <= 0) {
-            player.position.x = 2;
+        if (player.position.x <= leftWall) {
+            player.position.x = leftWall + 2;
         }
-        if (player.position.x >= WIDTH - 1) {
-            player.position.x = WIDTH - 2;
+        if (player.position.x >= rightWall) {
+            player.position.x = rightWall - 2;
         }
 
         // Basic Movement.
