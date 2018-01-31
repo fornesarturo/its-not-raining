@@ -215,9 +215,9 @@ function updateTimer(){
     let seconds = Math.floor((timer) / 1000);
     let ms = Math.floor(timer % 1000);
     // Add timer
-    textSize(60);
+    textSize(40);
     fill(255, 255, 255);
-    text(seconds + "." + ms , WIDTH * (3/4), HEIGHT / 4);
+    text(seconds + "." + ms , WIDTH / 10, HEIGHT / 10);
 }
 
 function restartLevel() {
