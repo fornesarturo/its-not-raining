@@ -111,8 +111,18 @@ function reset(res) {
 
 function draw() {
     background(0, 0, 0);
-    //line(leftWall, 0, leftWall, HEIGHT);
-    //line(rightWall, 0, rightWall, HEIGHT);
+
+    // Hardcoded text
+    //textSize(10);
+    fill(255, 255, 255);
+    //
+    text("Move with ARROW KEYS", WIDTH * (0.1), HEIGHT * (0.9), 90, 225);
+    //
+    text("Jump with SPACE" , WIDTH * (0.1), HEIGHT * (0.85));
+    //
+    textSize(15);
+    text("Jump when touching a wall and above the floor", WIDTH * (0.1), HEIGHT * (0.70), 150, 300);
+    // Hardcoded text end
 
     if(levelLoaded) {
 
