@@ -3,27 +3,26 @@ const SPEED = 7;
 const GRAVITY = 1;
 const JUMP = 15;
 const WALL_GRAB = 2;
-const WIDTH = 1800;
-const HEIGHT = 600;
+const WIDTH = 900;
+const HEIGHT = 900;
+// Margin
+const leftWall = 0;
+const rightWall = 899;
 
 // Level loading.
 var levelLoaded, levelId;
-
 // Time.
 var timeStart, timeEnd;
-
-var levelEnded;
-
 // Sprites.
 var player;
-
 // Structures.
 var walls, end;
-
 // Obstacles and enemies
 var obstacles;
 
+// Flags
 var walled, grounded, direction, waitForMovement;
+var levelEnded;
 
 var currentLevel;
 
@@ -69,17 +68,11 @@ function reset(res) {
                 var obstaclesJSON = res[key];
                 var l = obstaclesJSON.length;
                 for(var i = 0; i < l; i++) {
-                    index = obstaclesJSON[i]
+                    index = obstaclesJSON[i].coordinates;
                     let obst = createSprite(index[0], index[1], index[2], index[3]);
                     obst.shapeColor = color(255);
-                    obst.setupFunc = (o) => {
-                        o.velocity.x = 5;
-                    };
-                    obst.behaviourFunc = (o) => {
-                        o.collide(walls, function(sprite, target) {
-                            sprite.velocity.x *= -1;
-                        });
-                    };
+                    obst.setupFunc = eval(obstaclesJSON[i].setup);
+                    obst.behaviourFunc = eval(obstaclesJSON[i].behaviour);
                     obstacles.add(obst);
                 }
             }
@@ -120,10 +113,20 @@ function draw() {
 
     if(levelLoaded) {
 
-        // console.log(walled, grounded, direction, waitForMovement);
+        if(levelId == 1) {
+            printTutorialText();
+        }
 
         if (!waitForMovement)
             player.velocity.x = 0;
+        
+        // Restric position outside of canvas
+        if (player.position.x <= leftWall) {
+            player.position.x = leftWall + 2;
+        }
+        if (player.position.x >= rightWall) {
+            player.position.x = rightWall - 2;
+        }
 
         // Basic Movement.
         if (keyDown("left")) {
@@ -211,9 +214,9 @@ function updateTimer(){
     let seconds = Math.floor((timer) / 1000);
     let ms = Math.floor(timer % 1000);
     // Add timer
-    textSize(60);
+    textSize(40);
     fill(255, 255, 255);
-    text(seconds + "." + ms , WIDTH * (3/4), HEIGHT / 4);
+    text(seconds + "." + ms , WIDTH / 10, HEIGHT / 10);
 }
 
 function restartLevel() {
@@ -244,4 +247,19 @@ function clearSprites() {
     while (obstacles.length > 0) {
         obstacles[0].remove();
     }
+}
+
+function printTutorialText() {
+    // Text color
+    fill(255, 255, 255);
+    // Text movement
+    text("Move with ARROW KEYS", WIDTH * (0.1), HEIGHT * (0.9), 90, 225);
+    // Text jump
+    text("Jump with SPACE" , WIDTH * (0.1), HEIGHT * (0.85));
+    // Text go to goal
+    text("Level ends here" , WIDTH * (0.83), HEIGHT * (0.1));
+    // Change text size
+    textSize(15);
+    // Wall jump
+    text("Jump when touching a wall and above the floor", WIDTH * (0.1), HEIGHT * (0.70), 150, 300);
 }
