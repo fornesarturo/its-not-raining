@@ -19,6 +19,8 @@ var player;
 var walls, end;
 // Obstacles and enemies
 var obstacles;
+// Test
+var textToDraw;
 
 // Flags
 var walled, grounded, direction, waitForMovement;
@@ -58,6 +60,7 @@ function loadLevel(data) {
 }
 
 function reset(res) {
+    textToDraw = false;
     // Build from request response.
     for(var key in res) {
         if(res.hasOwnProperty(key)) {
@@ -91,6 +94,9 @@ function reset(res) {
                 player.position.x = playerJSON[0];
                 player.position.y = playerJSON[1];
             }
+            else if(key == "text") {
+                textToDraw = res[key];
+            }
         }
     }
 
@@ -110,22 +116,23 @@ function reset(res) {
 
 function draw() {
     background(0, 0, 0);
+    // Draw GameOverText
+    if (textToDraw && levelEnded)
+        drawText();
     if(levelLoaded) {
 
-        if(levelId == 1) {
-            printTutorialText();
-        }
+        // Draw text if there's any.
+        if (textToDraw)
+            drawText();
 
         if (!waitForMovement)
             player.velocity.x = 0;
         
         // Restric position outside of canvas
-        if (player.position.x <= leftWall) {
+        if (player.position.x <= leftWall)
             player.position.x = leftWall + 2;
-        }
-        if (player.position.x >= rightWall) {
+        if (player.position.x >= rightWall)
             player.position.x = rightWall - 2;
-        }
 
         // Basic Movement.
         if (keyDown("left")) {
@@ -156,16 +163,14 @@ function draw() {
                 direction = target.position.x - sprite.position.x;
                 grounded = false;
             }
-            else if (sprite.touching.bottom){
+            else if (sprite.touching.bottom) {
                 grounded = true;
-                // player.velocity.y = 0;
             }
         });
 
 
-        if (!grounded && player.velocity.y <= 17) {
+        if (!grounded && player.velocity.y <= 17)
             player.velocity.y += GRAVITY;
-        }
 
         if (keyWentDown("space")) {
             if (walled && !grounded) {
@@ -192,9 +197,8 @@ function draw() {
         });
 
         // Update obstacles
-        for(let i = 0; i < obstacles.length; i++){
+        for(let i = 0; i < obstacles.length; i++)
             obstacles[i].behaviourFunc(obstacles[i]);
-        }
 
         player.overlap(end, (sprite, target) => {
             levelEnded = true;
@@ -229,37 +233,40 @@ function restartLevel() {
 }
 
 function levelEnd() {
-    textSize(60);
-    fill(255, 255, 255);
-    text("GAME OVER", WIDTH / 2, HEIGHT / 2);
+    textToDraw = [{
+        fill: [255, 255, 255],
+        textSize: 60,
+        texts: [["Level Cleared!", WIDTH/2 - 200, HEIGHT/2, 424, 1000]]
+    }];
     updateSprites(false);
-    clearSprites();
-    let data = { "id" : ++levelId };
-    loadLevel(data);
+    setTimeout(() => {
+        clearSprites();
+        let data = { "id": ++levelId };
+        loadLevel(data);
+    }, 2000);
 }
 
 function clearSprites() {
     walls.removeSprites();
     obstacles.removeSprites();
-    while (walls.length > 0) {
+    while (walls.length > 0)
         walls[0].remove();
-    }
-    while (obstacles.length > 0) {
+    while (obstacles.length > 0)
         obstacles[0].remove();
-    }
 }
 
-function printTutorialText() {
-    // Text color
-    fill(255, 255, 255);
-    // Text movement
-    text("Move with ARROW KEYS", WIDTH * (0.1), HEIGHT * (0.9), 90, 225);
-    // Text jump
-    text("Jump with SPACE" , WIDTH * (0.1), HEIGHT * (0.85));
-    // Text go to goal
-    text("Level ends here" , WIDTH * (0.83), HEIGHT * (0.1));
-    // Change text size
-    textSize(15);
-    // Wall jump
-    text("Jump when touching a wall and above the floor", WIDTH * (0.1), HEIGHT * (0.70), 150, 300);
+function drawText() {
+    let l = textToDraw.length;
+    for (let i = 0; i < l; i++) {
+        let instance = textToDraw[i];
+        fill(instance.fill[0], instance.fill[1], instance.fill[2]);
+        textSize(instance.textSize);
+        for (let textIndex in instance.texts) {
+            let textInstance = instance.texts[textIndex];
+            if (textInstance.length == 5)
+                text(textInstance[0], textInstance[1], textInstance[2], textInstance[3], textInstance[4]);
+            else if (textInstance.length == 3)
+                text(textInstance[0], textInstance[1], textInstance[2]);
+        }
+    }
 }
