@@ -52,6 +52,7 @@ function loadLevel(data) {
     .then(res => res.json())
     .then(resJSON => {
         currentLevel = resJSON;
+        timeStart = new Date();
         reset(currentLevel);
     });
 }
@@ -102,7 +103,6 @@ function reset(res) {
     waitForMovement = false;
     levelEnded = false;
     player.velocity.x = 0;
-    timeStart = new Date();
     timeEnd = new Date();
     levelLoaded = true;
     updateSprites(true);
@@ -110,7 +110,6 @@ function reset(res) {
 
 function draw() {
     background(0, 0, 0);
-
     if(levelLoaded) {
 
         if(levelId == 1) {
@@ -150,7 +149,7 @@ function draw() {
             }
         }
         
-        player.collide(walls, function(sprite, target) {
+        player.collide(walls, (sprite, target) => {
             if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
                 walled = true;
                 player.velocity.y = WALL_GRAB;
@@ -177,7 +176,7 @@ function draw() {
                 } else {
                     player.setSpeed(20, -125);
                 }
-                setTimeout(function () {
+                setTimeout(() => {
                     waitForMovement = false;
                 }, 200);
             } else if (grounded) {
@@ -187,18 +186,21 @@ function draw() {
         }
 
         // Obstacles interactions
-        if (player.overlap(obstacles)) {
+        player.overlap(obstacles, (sprite, target) => {
+            levelLoaded = false;
             restartLevel();
-        }
+        });
 
         // Update obstacles
         for(let i = 0; i < obstacles.length; i++){
             obstacles[i].behaviourFunc(obstacles[i]);
         }
 
-        if (end.overlap(player)) {
+        player.overlap(end, (sprite, target) => {
+            levelEnded = true;
+            levelLoaded = false;
             levelEnd();
-        }
+        });
 
         player.debug = mouseIsPressed;
         drawSprites();
@@ -223,12 +225,10 @@ function restartLevel() {
     walls.removeSprites();
     obstacles.removeSprites();
     clearSprites();
-    let data = { "id" : levelId };
     reset(currentLevel);
 }
 
 function levelEnd() {
-    levelEnded = true;
     textSize(60);
     fill(255, 255, 255);
     text("GAME OVER", WIDTH / 2, HEIGHT / 2);
