@@ -1,3 +1,6 @@
+# Our Exceptions
+.env
+
 # Logs
 logs
 *.log
