@@ -19,9 +19,12 @@ var player;
 var walls, end;
 // Obstacles and enemies
 var obstacles;
+
 // Flags
 var walled, grounded, direction, waitForMovement;
 var levelEnded;
+
+var currentLevel;
 
 function setup() {
     createCanvas(WIDTH, HEIGHT);
@@ -47,12 +50,13 @@ function loadLevel(data) {
     };
     fetch("/getLevel", options)
     .then(res => res.json())
-    .then(resJSON => reset(resJSON));
+    .then(resJSON => {
+        currentLevel = resJSON;
+        reset(currentLevel);
+    });
 }
 
 function reset(res) {
-
-    console.log(res);
     // Build from request response.
     for(var key in res) {
         if(res.hasOwnProperty(key)) {
@@ -220,7 +224,7 @@ function restartLevel() {
     obstacles.removeSprites();
     clearSprites();
     let data = { "id" : levelId };
-    loadLevel(data);
+    reset(currentLevel);
 }
 
 function levelEnd() {
@@ -230,8 +234,7 @@ function levelEnd() {
     text("GAME OVER", WIDTH / 2, HEIGHT / 2);
     updateSprites(false);
     clearSprites();
-    let data = { "id" : levelId};
-    // let data = { "id" : ++levelId };
+    let data = { "id" : ++levelId };
     loadLevel(data);
 }
 
