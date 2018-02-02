@@ -239,11 +239,9 @@ function levelEnd() {
         texts: [["Level Cleared!", WIDTH/2 - 200, HEIGHT/2, 424, 1000]]
     }];
     updateSprites(false);
-    setTimeout(() => {
-        clearSprites();
-        let data = { "id": ++levelId };
-        loadLevel(data);
-    }, 2000);
+    clearSprites();
+    let data = { "id" : ++levelId };
+    loadLevel(data);
 }
 
 function clearSprites() {
