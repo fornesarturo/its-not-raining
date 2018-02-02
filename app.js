@@ -39,7 +39,19 @@ gameRouter.route('/getLevel')
 					[450, 5, 950, 50]
 				],
 				"obstacles": [
-					[500, 500, 50, 50]
+					{
+						'coordinates': [500, 500, 50, 50],
+
+						'setup': "(o) => { \
+							o.velocity.x = 5; \
+						}",
+
+						'behaviour': "(o) => { \
+							o.collide(walls, function(sprite, target) { \
+								sprite.velocity.x *= -1; \
+							}); \
+						}",
+					}
 				],
 				"end": [
 					[830, 50, 35, 35]

@@ -63,17 +63,11 @@ function reset(res) {
                 var obstaclesJSON = res[key];
                 var l = obstaclesJSON.length;
                 for(var i = 0; i < l; i++) {
-                    index = obstaclesJSON[i]
+                    index = obstaclesJSON[i].coordinates;
                     let obst = createSprite(index[0], index[1], index[2], index[3]);
                     obst.shapeColor = color(255);
-                    obst.setupFunc = (o) => {
-                        o.velocity.x = 5;
-                    };
-                    obst.behaviourFunc = (o) => {
-                        o.collide(walls, function(sprite, target) {
-                            sprite.velocity.x *= -1;
-                        });
-                    };
+                    obst.setupFunc = eval(obstaclesJSON[i].setup);
+                    obst.behaviourFunc = eval(obstaclesJSON[i].behaviour);
                     obstacles.add(obst);
                 }
             }
@@ -112,21 +106,11 @@ function reset(res) {
 function draw() {
     background(0, 0, 0);
 
-    // Hardcoded text
-    //textSize(10);
-    fill(255, 255, 255);
-    //
-    text("Move with ARROW KEYS", WIDTH * (0.1), HEIGHT * (0.9), 90, 225);
-    //
-    text("Jump with SPACE" , WIDTH * (0.1), HEIGHT * (0.85));
-    //
-    textSize(15);
-    text("Jump when touching a wall and above the floor", WIDTH * (0.1), HEIGHT * (0.70), 150, 300);
-    // Hardcoded text end
-
     if(levelLoaded) {
 
-        // console.log(walled, grounded, direction, waitForMovement);
+        if(levelId == 1) {
+            printTutorialText();
+        }
 
         if (!waitForMovement)
             player.velocity.x = 0;
@@ -259,4 +243,19 @@ function clearSprites() {
     while (obstacles.length > 0) {
         obstacles[0].remove();
     }
+}
+
+function printTutorialText() {
+    // Text color
+    fill(255, 255, 255);
+    // Text movement
+    text("Move with ARROW KEYS", WIDTH * (0.1), HEIGHT * (0.9), 90, 225);
+    // Text jump
+    text("Jump with SPACE" , WIDTH * (0.1), HEIGHT * (0.85));
+    // Text go to goal
+    text("Level ends here" , WIDTH * (0.83), HEIGHT * (0.1));
+    // Change text size
+    textSize(15);
+    // Wall jump
+    text("Jump when touching a wall and above the floor", WIDTH * (0.1), HEIGHT * (0.70), 150, 300);
 }
