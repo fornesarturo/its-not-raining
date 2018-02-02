@@ -21,8 +21,7 @@ gameRouter.route('/')
 	});
 gameRouter.route('/getLevel')
 	.post(function (req, res, next) {
-		console.log("REQUESTING");
-		console.log(req.body);
+		console.log(req.method + " " + (req.originalUrl || req.url) + " LevelID: " + req.body["id"]);
 		if (req.body["id"] >= 0) {
 			let level = getLevel(req.body["id"]);
 			res.json(level);

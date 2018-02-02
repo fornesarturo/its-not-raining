@@ -28,7 +28,7 @@ function setup() {
     player = createSprite(300, 200, 25, 25);
     walls = Group();
     obstacles = Group();
-    levelId = -1;
+    levelId = 1;
     levelLoaded = false;
     let data = { "id" : levelId };
     loadLevel(data);
@@ -52,6 +52,7 @@ function loadLevel(data) {
 
 function reset(res) {
 
+    console.log(res);
     // Build from request response.
     for(var key in res) {
         if(res.hasOwnProperty(key)) {
