@@ -155,7 +155,7 @@ function draw() {
                 direction = target.position.x - sprite.position.x;
             }
             else if (sprite.touching.bottom) {
-                player.velocity.y = 0.001;
+                sprite.velocity.y = 0.001;
             }
         });
 
@@ -163,7 +163,6 @@ function draw() {
             player.velocity.y += GRAVITY;
 
         if (keyWentDown("space")) {
-            console.log(player.touching.bottom);
             if ((player.touching.left || player.touching.right) && !player.touching.bottom) {
                 waitForMovement = true;
                 if (direction < 0) {
