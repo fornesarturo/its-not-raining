@@ -127,7 +127,7 @@ function draw() {
 
         if (!waitForMovement)
             player.velocity.x = 0;
-        
+
         // Restric position outside of canvas
         if (player.position.x <= leftWall)
             player.position.x = leftWall + 2;
@@ -165,11 +165,11 @@ function draw() {
             }
             else if (sprite.touching.bottom) {
                 grounded = true;
+                player.velocity.y = 0;
             }
         });
 
-
-        if (!grounded && player.velocity.y <= 17)
+        if (!player.touching.bottom)
             player.velocity.y += GRAVITY;
 
         if (keyWentDown("space")) {
