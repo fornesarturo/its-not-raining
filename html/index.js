@@ -157,6 +157,9 @@ function draw() {
             else if (sprite.touching.bottom) {
                 sprite.velocity.y = 0.001;
             }
+            if (sprite.touching.top){
+                player.velocity.y = 0;
+            }
         });
 
         if (!player.touching.bottom)
