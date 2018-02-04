@@ -23,7 +23,7 @@ var obstacles;
 var textToDraw;
 
 // Flags
-var walled, grounded, direction, waitForMovement;
+var direction, waitForMovement;
 var levelEnded;
 
 var currentLevel;
@@ -104,8 +104,6 @@ function reset(res) {
         obstacles[i].setupFunc(obstacles[i]);
     }
 
-    walled = false;
-    grounded = false;
     waitForMovement = false;
     levelEnded = false;
     player.velocity.x = 0;
@@ -138,34 +136,26 @@ function draw() {
         if (keyDown("left")) {
             if (!waitForMovement)
                 player.velocity.x = -SPEED;
-            if (direction > 0 && walled)
-                walled = false;
         }
         if (keyDown("right")) {
             if (!waitForMovement)
                 player.velocity.x = SPEED;
-            if (direction < 0 && walled)
-                walled = false;
         }
 
         // Stop Movement.
         if (keyWentUp("left") || keyWentUp("right")) {
             if (!waitForMovement) {
                 player.velocity.x = 0;
-                walled = false;
             }
         }
-        
+
         player.collide(walls, (sprite, target) => {
             if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
-                walled = true;
                 player.velocity.y = WALL_GRAB;
                 direction = target.position.x - sprite.position.x;
-                grounded = false;
             }
             else if (sprite.touching.bottom) {
-                grounded = true;
-                player.velocity.y = 0;
+                player.velocity.y = 0.001;
             }
         });
 
@@ -173,8 +163,8 @@ function draw() {
             player.velocity.y += GRAVITY;
 
         if (keyWentDown("space")) {
-            if (walled && !grounded) {
-                walled = false;
+            console.log(player.touching.bottom);
+            if ((player.touching.left || player.touching.right) && !player.touching.bottom) {
                 waitForMovement = true;
                 if (direction < 0) {
                     player.setSpeed(20, -55);
@@ -184,9 +174,8 @@ function draw() {
                 setTimeout(() => {
                     waitForMovement = false;
                 }, 200);
-            } else if (grounded) {
+            } else if (player.touching.bottom) {
                 player.velocity.y = -JUMP;
-                grounded = false;
             }
         }
 
