@@ -44,7 +44,11 @@ function getLevel(id) {
 		query: '{"id": ' + id + '}',
     };
     mLab.listDocuments(optionsDB, function (err, collections) {
-		level = collections[0];
+		console.log('Found: ' + collections.length);
+		if (collections.length > 0)
+			level = collections[0];
+		else
+			level = null;
 	});
 	return level;
 }
