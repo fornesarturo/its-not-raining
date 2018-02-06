@@ -167,26 +167,41 @@ function draw() {
             if (sprite.touching.top){
                 player.velocity.y = 0;
             }
+            if (keyWentDown("space")) {
+                if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
+                    waitForMovement = true;
+                    if (direction < 0) {
+                        player.setSpeed(20, -55);
+                    } else {
+                        player.setSpeed(20, -125);
+                    }
+                    setTimeout(() => {
+                        waitForMovement = false;
+                    }, 200);
+                } else if (sprite.touching.bottom) {
+                    sprite.velocity.y = -JUMP;
+                }
+            }
         });
 
         if (!player.touching.bottom)
             player.velocity.y += GRAVITY;
 
-        if (keyWentDown("space")) {
-            if ((player.touching.left || player.touching.right) && !player.touching.bottom) {
-                waitForMovement = true;
-                if (direction < 0) {
-                    player.setSpeed(20, -55);
-                } else {
-                    player.setSpeed(20, -125);
-                }
-                setTimeout(() => {
-                    waitForMovement = false;
-                }, 200);
-            } else if (player.touching.bottom) {
-                player.velocity.y = -JUMP;
-            }
-        }
+        // if (keyWentDown("space")) {
+        //     if ((player.touching.left || player.touching.right) && !player.touching.bottom) {
+        //         waitForMovement = true;
+        //         if (direction < 0) {
+        //             player.setSpeed(20, -55);
+        //         } else {
+        //             player.setSpeed(20, -125);
+        //         }
+        //         setTimeout(() => {
+        //             waitForMovement = false;
+        //         }, 200);
+        //     } else if (player.touching.bottom) {
+        //         player.velocity.y = -JUMP;
+        //     }
+        // }
 
         // Obstacles interactions
         player.overlap(obstacles, (sprite, target) => {
