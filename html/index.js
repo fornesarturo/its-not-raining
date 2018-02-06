@@ -127,7 +127,7 @@ function draw() {
             player.velocity.x = 0;
 
         // Restric position outside of canvas
-        if (player.position.x <= leftWall + 50)
+        if (player.position.x <= leftWall)
             player.position.x = leftWall + 2;
         if (player.position.x >= rightWall)
             player.position.x = rightWall - 2;
