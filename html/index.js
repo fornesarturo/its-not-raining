@@ -23,16 +23,19 @@ var obstacles;
 var textToDraw;
 
 // Flags
-var direction, waitForMovement;
+var walled, grounded, direction, waitForMovement;
 var levelEnded;
 
 var currentLevel;
+
+var scores;
 
 function setup() {
     createCanvas(WIDTH, HEIGHT);
     player = createSprite(300, 200, 25, 25);
     walls = Group();
     obstacles = Group();
+    scores = {};
     levelId = 1;
     levelLoaded = false;
     let data = { "id" : levelId };
@@ -60,6 +63,10 @@ function loadLevel(data) {
 }
 
 function reset(res) {
+    if (res == null){
+        endGame();
+        return;
+    }
     textToDraw = false;
     // Build from request response.
     for(var key in res) {
@@ -104,6 +111,8 @@ function reset(res) {
         obstacles[i].setupFunc(obstacles[i]);
     }
 
+    walled = false;
+    grounded = false;
     waitForMovement = false;
     levelEnded = false;
     player.velocity.x = 0;
@@ -136,28 +145,33 @@ function draw() {
         if (keyDown("left")) {
             if (!waitForMovement)
                 player.velocity.x = -SPEED;
+            if (direction > 0 && walled)
+                walled = false;
         }
         if (keyDown("right")) {
             if (!waitForMovement)
                 player.velocity.x = SPEED;
+            if (direction < 0 && walled)
+                walled = false;
         }
 
         // Stop Movement.
         if (keyWentUp("left") || keyWentUp("right")) {
             if (!waitForMovement) {
                 player.velocity.x = 0;
+                walled = false;
             }
         }
-
+        
         player.collide(walls, (sprite, target) => {
             if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
+                walled = true;
                 player.velocity.y = WALL_GRAB;
                 direction = target.position.x - sprite.position.x;
+                grounded = false;
             }
             else if (sprite.touching.bottom) {
-                sprite.velocity.y = 0.001;
-            }
-            if (sprite.touching.top){
+                grounded = true;
                 player.velocity.y = 0;
             }
 
@@ -180,22 +194,6 @@ function draw() {
 
         if (!player.touching.bottom)
             player.velocity.y += GRAVITY;
-
-        // if (keyWentDown("space")) {
-        //     if ((player.touching.left || player.touching.right) && !player.touching.bottom) {
-        //         waitForMovement = true;
-        //         if (direction < 0) {
-        //             player.setSpeed(20, -55);
-        //         } else {
-        //             player.setSpeed(20, -125);
-        //         }
-        //         setTimeout(() => {
-        //             waitForMovement = false;
-        //         }, 200);
-        //     } else if (player.touching.bottom) {
-        //         player.velocity.y = -JUMP;
-        //     }
-        // }
 
         // Obstacles interactions
         player.overlap(obstacles, (sprite, target) => {
@@ -240,10 +238,14 @@ function restartLevel() {
 }
 
 function levelEnd() {
+    let timer = timeEnd - timeStart;
+    let seconds = Math.floor((timer) / 1000);
+    let ms = Math.floor(timer % 1000);
+    scores[levelId] = timer;
     textToDraw = [{
         fill: [255, 255, 255],
         textSize: 60,
-        texts: [["Level Cleared!", WIDTH/2 - 200, HEIGHT/2, 424, 1000]]
+        texts: [["Level Cleared!\n" + seconds + "." + ms + "s", WIDTH/2 - 200, HEIGHT/2, 424, 1000]]
     }];
     updateSprites(false);
     clearSprites();
@@ -274,4 +276,13 @@ function drawText() {
                 text(textInstance[0], textInstance[1], textInstance[2]);
         }
     }
+}
+
+function endGame(){
+    let nickname = prompt("Enter a nickname:");
+    while (nickname == "" || nickname == null){
+        nickname = prompt("Please entera valid nickname:");
+    }
+    scores["nickname"] = nickname;
+    console.log(scores);
 }
