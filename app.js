@@ -16,20 +16,27 @@ app.use(express.static('html'))
 app.use('/', gameRouter);
 
 gameRouter.route('/')
-	.get(function(req, res, next) {
+	.get((req, res, next) => {
 		res.status(200).sendFile(path.join(__dirname + '/html/index.html'));
 	});
+
 gameRouter.route('/getLevel')
-	.post(function (req, res, next) {
-		console.log(req.method + " " + (req.originalUrl || req.url) + " LevelID: " + req.body["id"]);
+	.post((req, res, next) => {
+		console.log(req.method, " ", (req.originalUrl || req.url), " LevelID: ", req.body["id"]);
 		if (req.body["id"] >= 0) {
 			let level = getLevel(req.body["id"]);
 			res.json(level);
-		} 
+		} 	
 		else {
 			let level = getLevel(-1);
 			res.json(level);
 		}
+	});
+
+gameRouter.route('/score')
+	.post((req, res, next) => {
+		console.log(req.method, " ", (req.originalUrl || req.url), ": ", req.body);
+		saveScore(res, req.body);
 	});
 
 app.listen(PORT, function () {
@@ -38,15 +45,28 @@ app.listen(PORT, function () {
 
 function getLevel(id) {
 	let level;
-	var optionsDB = {
+	let optionsDB = {
         database: 'its-not-raining',
 		collectionName: 'levels',
 		query: '{"id": ' + id + '}',
     };
-    mLab.listDocuments(optionsDB, function (err, collections) {
+    mLab.listDocuments(optionsDB, (err, collections) => {
 		level = collections[0];
 	});
 	return level;
+}
+
+function saveScore(res, userScore) {
+	let optionsDB = {
+		database: 'its-not-raining',
+		collectionName: 'scores',
+		documents: userScore
+	};
+	mLab.insertDocuments(optionsDB, (err, collections) => {
+		if(err) console.dir(err);
+		console.log(collections);
+	});
+	res.sendStatus(200);
 }
 
 module.exports = app;
