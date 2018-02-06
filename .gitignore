@@ -1,6 +1,6 @@
 # Our Exceptions
 *.swp
-
+.node-xmlh*
 
 # Logs
 logs
