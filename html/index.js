@@ -28,11 +28,14 @@ var levelEnded;
 
 var currentLevel;
 
+var scores;
+
 function setup() {
     createCanvas(WIDTH, HEIGHT);
     player = createSprite(300, 200, 25, 25);
     walls = Group();
     obstacles = Group();
+    scores = {};
     levelId = 1;
     levelLoaded = false;
     let data = { "id" : levelId };
@@ -60,6 +63,10 @@ function loadLevel(data) {
 }
 
 function reset(res) {
+    if (res == null){
+        endGame();
+        return;
+    }
     textToDraw = false;
     // Build from request response.
     for(var key in res) {
@@ -224,10 +231,14 @@ function restartLevel() {
 }
 
 function levelEnd() {
+    let timer = timeEnd - timeStart;
+    let seconds = Math.floor((timer) / 1000);
+    let ms = Math.floor(timer % 1000);
+    scores[levelId] = timer;
     textToDraw = [{
         fill: [255, 255, 255],
         textSize: 60,
-        texts: [["Level Cleared!", WIDTH/2 - 200, HEIGHT/2, 424, 1000]]
+        texts: [["Level Cleared!\n" + seconds + "." + ms + "s", WIDTH/2 - 200, HEIGHT/2, 424, 1000]]
     }];
     updateSprites(false);
     clearSprites();
@@ -258,4 +269,13 @@ function drawText() {
                 text(textInstance[0], textInstance[1], textInstance[2]);
         }
     }
+}
+
+function endGame(){
+    let nickname = prompt("Enter a nickname:");
+    while (nickname == "" || nickname == null){
+        nickname = prompt("Please entera valid nickname:");
+    }
+    scores["nickname"] = nickname;
+    console.log(scores);
 }
