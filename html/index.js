@@ -72,7 +72,7 @@ function reset(res) {
     for(var key in res) {
         if(res.hasOwnProperty(key)) {
             if(key == "end") {
-                var endJSON = res[key][0];
+                var endJSON = res[key];
                 end = createSprite(endJSON[0], endJSON[1], endJSON[2], endJSON[3]);
             }
             else if(key == "obstacles") {
@@ -97,11 +97,12 @@ function reset(res) {
                 }
             }
             else if(key == "player") {
-                var playerJSON = res[key][0];
+                var playerJSON = res[key];
                 player.position.x = playerJSON[0];
                 player.position.y = playerJSON[1];
             }
             else if(key == "text") {
+                console.log("DRAW NEEDED");
                 textToDraw = res[key];
             }
         }
@@ -257,14 +258,15 @@ function clearSprites() {
 
 function drawText() {
     let l = textToDraw.length;
+    
     for (let i = 0; i < l; i++) {
         let instance = textToDraw[i];
         fill(instance.fill[0], instance.fill[1], instance.fill[2]);
         textSize(instance.textSize);
         for (let textIndex in instance.texts) {
             let textInstance = instance.texts[textIndex];
-            if (textInstance.length == 5)
-                text(textInstance[0], textInstance[1], textInstance[2], textInstance[3], textInstance[4]);
+            if (textInstance.length == 5){
+                text(textInstance[0], textInstance[1], textInstance[2], textInstance[3], textInstance[4]);}
             else if (textInstance.length == 3)
                 text(textInstance[0], textInstance[1], textInstance[2]);
         }
