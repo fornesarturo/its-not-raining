@@ -36,6 +36,8 @@ function Leaderboard() {
             fill(255, 255, 255);
             textSize(100);
             text("LEADERBOARD", 100, 200);
+            textSize(30);
+            text("Press '1' to return", 100, 850);
             textSize(50);
             for (let i = 0; i < leaderboardLength; i++) {
                 fill(255, 255, 255);
