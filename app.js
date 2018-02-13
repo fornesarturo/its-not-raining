@@ -47,7 +47,6 @@ gameRouter.route('/getLevel')
 		console.log(req.method, " ", (req.originalUrl || req.url), " LevelID: ", req.body["id"]);
 		if (req.body["id"] >= 0) {
 			getLevel(req.body["id"]).then((level) => {
-				console.log(level);
 				res.json(level);
 			});
 		} 	
@@ -58,6 +57,12 @@ gameRouter.route('/getLevel')
 	});
 
 gameRouter.route('/score')
+	.get((req, res, next) => {
+		console.log(req.method, " ", (req.originalUrl || req.url));
+		getScores().then((scores) => {
+			res.json(scores);
+		})
+	})
 	.post((req, res, next) => {
 		console.log(req.method, " ", (req.originalUrl || req.url), ": ", req.body);
 		saveScore(res, req.body);
@@ -72,6 +77,13 @@ async function getLevel(idN) {
 		return levels[0];
 	});
 	return level;
+}
+
+async function getScores() {
+	let leaderboard = await scoreModel.find({}).sort({ score: -1 }).exec().then((scores) => {
+		return scores;
+	});
+	return leaderboard;
 }
 
 function saveScore(res, userScore) {
