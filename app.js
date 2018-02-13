@@ -71,6 +71,9 @@ gameRouter.route('/score')
 // DB Connections
 async function getLevel(idN) {
 	let level = await levelModel.find({id: idN}).exec().then((levels) => {
+		if (levels.length <= 0){
+			return null;
+		}
 		return levels[0];
 	});
 	return level;
