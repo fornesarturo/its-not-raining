@@ -287,7 +287,9 @@ function endGame(){
     console.log(scores);
     postScore();
     levelEnded = false;
+    scores = {};
     levelId = 1;
+    levelLoaded = false;
     let data = { "id" : levelId };
     loadLevel(data);
 }
@@ -310,6 +312,5 @@ function postScore(){
     fetch("/score", options)
     .then(res => {
         console.log(res);
-        // Restart game, should take to leaderboards
     });
 }
