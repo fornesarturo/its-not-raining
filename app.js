@@ -20,10 +20,14 @@ app.use('/', gameRouter);
 var levelModel = require('./models/level');
 var scoreModel = require('./models/score');
 // DB Setup
-mongoose.connect(mongoUrl);
 mongoose.Promise = global.Promise;
+mongoose.connect(mongoUrl, (err) => {}).catch((err) => {
+	console.log(err);
+});
 let db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB (mLab) connection error:'));
+db.on('error', (err) => {
+	console.error.bind(console, 'MongoDB connection error:');
+});
 
 // Start server only after DB is connected
 db.once('open', () => {
