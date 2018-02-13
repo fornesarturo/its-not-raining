@@ -11,8 +11,8 @@ var scoreSchema = new Schema({
 });
 
 scoreSchema.path("userId").validate((value) => {
-    return value.length <= 10;
-}, "The maximum length is 10.");
+    return value.length <= 4;
+}, "The maximum length is 4.");
 
 var scoreModel = mongoose.model('Score', scoreSchema);
 module.exports = scoreModel;

@@ -4,8 +4,6 @@ function Game() {
     const GRAVITY = 1;
     const JUMP = 15;
     const WALL_GRAB = 2;
-    //const WIDTH = 900;
-    //const HEIGHT = 900;
     // Margin
     const leftWall = 0;
     const rightWall = 899;
