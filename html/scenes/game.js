@@ -1,4 +1,5 @@
 function Game() {
+    var self = this;
     // Universal constants.
     const SPEED = 7;
     const GRAVITY = 1;
@@ -276,9 +277,42 @@ function Game() {
     function endGame(){
         let nickname = prompt("Enter a nickname:");
         while (nickname == "" || nickname == null){
-            nickname = prompt("Please enter a valid nickname:");
+            nickname = prompt("Please entera valid nickname:");
         }
-        scores["nickname"] = nickname;
+        let total = 0;
+        for (let i = 1; i < levelId; i++){
+            total += scores[i];
+        }
+        scores["userId"] = nickname;
+        scores["score"] = total;
         console.log(scores);
+        postScore();
+        levelEnded = false;
+        scores = {};
+        levelId = 1;
+        levelLoaded = false;
+        let data = { "id" : levelId };
+        self.sceneManager.showScene(Leaderboard);
+    }
+
+    function postScore(){
+        var data = {
+            userId: scores["userId"],
+            score: scores["score"]
+        }
+        var options = {
+            hostname: 'localhost',
+            port: 1337,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify(data)
+        };
+        fetch("/score", options)
+        .then(res => {
+            console.log(res);
+        });
     }
 }
