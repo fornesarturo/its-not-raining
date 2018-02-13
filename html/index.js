@@ -278,6 +278,36 @@ function endGame(){
     while (nickname == "" || nickname == null){
         nickname = prompt("Please entera valid nickname:");
     }
-    scores["nickname"] = nickname;
+    let total = 0;
+    for (let i = 1; i < levelId; i++){
+        total += scores[i];
+    }
+    scores["userId"] = nickname;
+    scores["score"] = total;
     console.log(scores);
+    postScore();
+}
+
+function postScore(){
+    var data = {
+        userId: scores["userId"],
+        score: scores["score"]
+    }
+    var options = {
+        hostname: 'localhost',
+        port: 1337,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    };
+    fetch("/score", options)
+    .then(res => {
+        console.log(res);
+        // Restart game, should take to leaderboards
+        let data = { "id" : levelId };
+        loadLevel(data);
+    });
 }
