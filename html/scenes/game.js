@@ -249,6 +249,7 @@ function Game() {
     }
 
     function clearSprites() {
+        end.remove();
         walls.removeSprites();
         obstacles.removeSprites();
         while (walls.length > 0)
