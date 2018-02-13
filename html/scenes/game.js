@@ -274,11 +274,17 @@ function Game() {
         }
     }
 
-    function endGame(){
+    function getNickname(){
+        let exp = /^[a-z0-9]+$/i;
         let nickname = prompt("Enter a nickname:");
-        while (nickname == "" || nickname == null){
+        while (nickname == "" || nickname == null || nickname.length != 4 || nickname !== nickname.toUpperCase() || !nickname.match(exp)){
             nickname = prompt("Please entera valid nickname:");
         }
+        return nickname;
+    }
+
+    function endGame(){
+        let nickname = getNickname();
         let total = 0;
         for (let i = 1; i < levelId; i++){
             total += scores[i];
