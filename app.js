@@ -42,7 +42,7 @@ db.on('error', (err) => {
 // Start server only after DB is connected
 db.once('open', () => {
 	app.listen(PORT, function () {
-		console.log("Listening on port 1337 . . .");
+		console.log("Listening on port ", PORT, " . . .");
 	});
 });
 
@@ -57,8 +57,8 @@ gameRouter.route('/getLevel')
 		console.log(req.method, " ", (req.originalUrl || req.url), " LevelID: ", req.body["id"]);
 		if (req.body["id"] >= 0) {
 			getLevel(req.body["id"]).then((level) => {
-				console.log(level);
 				res.json(level);
+				res.status(200);
 			});
 		} 	
 		else {
