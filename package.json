@@ -1,6 +1,6 @@
 {
   "name": "its-not-raining",
-  "version": "1.0.0",
+  "version": "0.1.6",
   "description": "Browser-based game",
   "main": "app.js",
   "scripts": {
