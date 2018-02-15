@@ -28,10 +28,10 @@ var scoreModel = require('./models/score');
 mongoose.Promise = global.Promise;
 mongoose.connect(config.mongoURI[app.settings.env], (err) => {
 	if(err) {
-		console.log('Error connecting to the database: ' + process.env.MONGO_DB + "\n" + err);
+		console.log('Error connecting to the database: ', process.env.MONGO_DB, "\n", err);
 	} 
 	else {
-		console.log('Connected to Database: ' + process.env.MONGO_DB);
+		console.log('Connected to Database: ', process.env.MONGO_DB, "\n");
 	}
 });
 let db = mongoose.connection;
@@ -100,9 +100,16 @@ async function getScores() {
 function saveScore(res, userScore) {
 	let scoreInstance = new scoreModel(userScore);
 	scoreInstance.save((err) => {
-		if(err) console.log(err);
+		if(err) {
+			console.log(err);
+		}
+		else {
+			successRes = {};
+			successRes["SUCCESS"] = userScore;
+			res.status(200);
+			res.json(successRes);
+		}
 	});
-	res.sendStatus(200);
 }
 
 module.exports = app;
