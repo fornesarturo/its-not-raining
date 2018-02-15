@@ -30,15 +30,18 @@ function Game() {
 
     var scores;
 
-    this.setup = () => {
-        player = createSprite(300, 200, 25, 25);
+    this.enter = () => {
         walls = Group();
         obstacles = Group();
         scores = {};
         levelId = 1;
         levelLoaded = false;
-        let data = { "id" : levelId };
+        let data = { "id": levelId };
         loadLevel(data);
+    }
+
+    this.setup = () => {
+        
     }
 
     function loadLevel(data) {
@@ -97,6 +100,7 @@ function Game() {
                 }
                 else if(key == "player") {
                     var playerJSON = res[key];
+                    player = createSprite(playerJSON[0], playerJSON[1], 25, 25);
                     player.position.x = playerJSON[0];
                     player.position.y = playerJSON[1];
                 }
@@ -247,6 +251,7 @@ function Game() {
     }
 
     function clearSprites() {
+        player.remove();
         end.remove();
         walls.removeSprites();
         obstacles.removeSprites();
