@@ -80,7 +80,7 @@ async function getLevel(idN) {
 }
 
 async function getScores() {
-	let leaderboard = await scoreModel.find({}).sort({ score: -1 }).exec().then((scores) => {
+	let leaderboard = await scoreModel.find({}).sort({ score: 1 }).exec().then((scores) => {
 		return scores;
 	});
 	return leaderboard;
