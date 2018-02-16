@@ -1,14 +1,19 @@
 // Main requirements
 const express = require('express');
+const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
-const dotenv = require('dotenv').config();
+if(app.settings.env == "test") {
+	const dotenv = require('dotenv').config({path: './test.env'});
+}
+else {
+	const dotenv = require('dotenv').config();
+}
 // Database requirements
+const config = require('./_config');
 const mongoose = require('mongoose');
-const mongoUrl = "mongodb://" + process.env.MONGO_USER + ":" + process.env.MONGO_PASS + "@its-not-raining-shard-00-00-nbjkh.mongodb.net:27017,its-not-raining-shard-00-01-nbjkh.mongodb.net:27017,its-not-raining-shard-00-02-nbjkh.mongodb.net:27017/its-not-raining?ssl=true&replicaSet=its-not-raining-shard-0&authSource=admin"
 
 // Express Setup
-const app = express();
 const PORT = process.env.PORT || 1337;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -21,8 +26,13 @@ var levelModel = require('./models/level');
 var scoreModel = require('./models/score');
 // DB Setup
 mongoose.Promise = global.Promise;
-mongoose.connect(mongoUrl, (err) => {}).catch((err) => {
-	console.log(err);
+mongoose.connect(config.mongoURI[app.settings.env], (err) => {
+	if(err) {
+		console.log('Error connecting to the database: ', process.env.MONGO_DB, "\n", err);
+	} 
+	else {
+		console.log('Connected to Database: ', process.env.MONGO_DB, "\n");
+	}
 });
 let db = mongoose.connection;
 db.on('error', (err) => {
@@ -32,7 +42,7 @@ db.on('error', (err) => {
 // Start server only after DB is connected
 db.once('open', () => {
 	app.listen(PORT, function () {
-		console.log("Listening on port 1337 . . .");
+		console.log("Listening on port ", PORT, " . . .");
 	});
 });
 
@@ -48,6 +58,7 @@ gameRouter.route('/getLevel')
 		if (req.body["id"] >= 0) {
 			getLevel(req.body["id"]).then((level) => {
 				res.json(level);
+				res.status(200);
 			});
 		} 	
 		else {
@@ -89,9 +100,16 @@ async function getScores() {
 function saveScore(res, userScore) {
 	let scoreInstance = new scoreModel(userScore);
 	scoreInstance.save((err) => {
-		if(err) console.log(err);
+		if(err) {
+			console.log(err);
+		}
+		else {
+			successRes = {};
+			successRes["SUCCESS"] = userScore;
+			res.status(200);
+			res.json(successRes);
+		}
 	});
-	res.sendStatus(200);
 }
 
 module.exports = app;
