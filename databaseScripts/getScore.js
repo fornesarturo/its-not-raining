@@ -35,8 +35,8 @@ db.once('open', () => {
     //                     if(err) console.log(err)
 
     // });
-    
-    scoreModel.find({userId: "BARRO DEJA DE HACER TRAMPA"}, (err, scoresS) => {
+
+    scoreModel.find({}, (err, scoresS) => {
         if(err) {
             console.log(err);
             mongoose.connection.close();
