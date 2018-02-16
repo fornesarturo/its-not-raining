@@ -28,6 +28,8 @@ var scoreModel = require('./models/score');
 mongoose.Promise = global.Promise;
 var envir = app.settings.env || "development";
 var dbUrl = config.mongoURI[envir] ;
+console.log(envir);
+console.log(dbUrl);
 mongoose.connect(dbUrl, (err) => {
 	if(err) {
 		console.log('Error connecting to the database: ', process.env.MONGO_DB, "\n", err);
