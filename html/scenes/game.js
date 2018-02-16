@@ -1,6 +1,10 @@
+// This scene show the game itself.
+// This is where the gameplay lies.
 function Game() {
+    // To be able to use 'this'-like stuff in functions inside
+    // anonymous functions.
     var self = this;
-    // Universal constants.
+    // Gameplay constants
     const SPEED = 7;
     const GRAVITY = 1;
     const JUMP = 15;
@@ -9,28 +13,31 @@ function Game() {
     const leftWall = 0;
     const rightWall = 899;
 
-    // Level loading.
+    // Level loading
     var levelLoaded, levelId;
-    // Time.
+    // Time
     var timeStart, timeEnd;
-    // Sprites.
+    // Sprites
     var player;
-    // Structures.
+    // Structures
     var walls, end;
     // Obstacles and enemies
     var obstacles;
-    // Test
+    // Text
     var textToDraw;
 
     // Flags
     var direction, waitForMovement;
     var levelEnded;
 
+    // Store the current level that's being played
+    // locally.
     var currentLevel;
 
     var scores;
 
     this.enter = () => {
+        // Groups for the sprites that function in the same way.
         walls = Group();
         obstacles = Group();
         scores = {};

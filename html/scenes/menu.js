@@ -1,19 +1,20 @@
+// This scene represents the menu.
+// It acts as the HUB and 'main' scene for It's not raining,
+// having connections to both the game and the leaderboard.
 function Menu() {
-    var drops = [];
     this.setup = () => {
-        for (var i = 0; i < 100; i++) {
-            drops[i] = new Drop();
-        }
+        // What will happen the first time this Scene is loaded.
     }
 
     this.draw = () => {
+        // 
         background(0);
         textAlign(CENTER, CENTER);
         rectMode(CENTER);
 
         drawText();
         
-        // Draw rain
+        // Draw the 'raindrops'
         for (var i = 0; i < drops.length; i++) {
             drops[i].fall();
             drops[i].show();
@@ -23,11 +24,11 @@ function Menu() {
     this.keyPressed = () => {
         switch(key) {   
             case '1':
-                console.log("Game");
+                // Load the Game scene.
                 this.sceneManager.showScene(Game);
                 break;
             case '2':
-                console.log("Leaderboard");
+                // Load the Leaderboard scene.
                 this.sceneManager.showScene(Leaderboard); 
                 break;   
         }
