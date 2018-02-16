@@ -27,7 +27,7 @@ var scoreModel = require('./models/score');
 // DB Setup
 mongoose.Promise = global.Promise;
 var envir = app.settings.env || "development";
-var dbUrl = config.mongoURI[app.settings.env] ;
+var dbUrl = config.mongoURI[envir] ;
 mongoose.connect(dbUrl, (err) => {
 	if(err) {
 		console.log('Error connecting to the database: ', process.env.MONGO_DB, "\n", err);
