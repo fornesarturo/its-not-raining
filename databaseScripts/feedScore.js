@@ -1,11 +1,12 @@
 // Database requirements
 const dotenv = require('dotenv').config();
 const mongoose = require('mongoose');
-const levelModel = require('../models/level');
+const scoreModel = require('../models/score');
 const config = require('../_config');
+
 // DB Setup
 mongoose.Promise = global.Promise;
-mongoose.connect(config.mongoURI[app.settings.env], (err) => {
+mongoose.connect(config.mongoURI["development"], (err) => {
 	if(err) {
 		console.log('Error connecting to the database: ' + process.env.MONGO_DB + "\n" + err);
 	} 
@@ -19,6 +20,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 data = {};
 
 let scoreInstance = new scoreModel(data);
-levelInstance.save((err) => {
+scoreInstance.save((err) => {
     if(err) console.log(err);
 });
