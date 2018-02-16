@@ -1,0 +1,23 @@
+html, body {
+    height: 100%;
+  }
+
+  canvas {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+  }
+/*
+  body {
+    margin: 0;
+    display: flex;
+  
+    // This centers our sketch horizontally.
+    justify-content: center;
+  
+    // This centers our sketch vertically.
+    align-items: center;
+  }
+*/

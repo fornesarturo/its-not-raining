@@ -12,6 +12,12 @@ You can play the game here, in [heroku](https://its-not-raining.herokuapp.com/).
 * [NodeJS](https://nodejs.org/)
 * [p5.js](https://p5js.org/)
 * [p5.play](http://p5play.molleindustria.org/)
+* [MongoDB ATLAS](https://cloud.mongodb.com)
+
+## Built with (Testing)
+* [Mocha](https://mochajs.org): Asynchronous testing.
+* [Chai](http://chaijs.com/): Assertion library.
+* [Supertest](https://github.com/visionmedia/supertest): Requests testing.
 
 ## Authors
 * [Arturo Fornés Arvayo](http://github.com/fornesarturo)
@@ -44,8 +50,10 @@ And run the project . . .
 ```bash
 # with vanilla node and npm
 $ npm start
-# and to run tests
+# to run tests
 $ npm test
+# and to run DB scripts
+$ npm run <desired-script>
 ```
 
 ## License
