@@ -19,6 +19,8 @@ function Game() {
     var timeStart, timeEnd;
     // Sprites
     var player;
+    // Bullets
+    var bullets;
     // Structures
     var walls, end;
     // Obstacles and enemies
@@ -40,6 +42,7 @@ function Game() {
         // Groups for the sprites that function in the same way.
         walls = Group();
         obstacles = Group();
+        bullets = Group();
         scores = {};
         levelId = 1;
         levelLoaded = false;
@@ -66,6 +69,7 @@ function Game() {
         .then(res => res.json())
         .then(resJSON => {
             currentLevel = resJSON;
+            scores[levelId] = 0;
             timeStart = new Date();
             reset(currentLevel);
         });
@@ -83,6 +87,7 @@ function Game() {
                 if(key == "end") {
                     var endJSON = res[key];
                     end = createSprite(endJSON[0], endJSON[1], endJSON[2], endJSON[3]);
+                    end.shapeColor = color(40, 169, 183);
                 }
                 else if(key == "obstacles") {
                     var obstaclesJSON = res[key];
@@ -110,6 +115,7 @@ function Game() {
                     player = createSprite(playerJSON[0], playerJSON[1], 25, 25);
                     player.position.x = playerJSON[0];
                     player.position.y = playerJSON[1];
+                    player.shapeColor = color(192, 70, 26);
                 }
                 else if(key == "text") {
                     textToDraw = res[key];
@@ -198,7 +204,34 @@ function Game() {
                 }
             }
 
-            // Obstacles interactions
+            // Fire a bullet to the left.
+            if (keyWentDown("z")) {
+                fireBullet(-1);
+            }
+
+            // Fire a bullet to the right.
+            if (keyWentDown("x")) {
+                fireBullet(1);
+            }
+
+            // Whenever a bullet collides with an obstacle.
+            bullets.collide(obstacles, (bullet, obstacle) => {
+                // Destroy the bullet and the obstacle.
+                bullet.remove();
+                obstacle.remove();
+                // Add 2 seconds to the starting timer of the level,
+                // which results in having 2 seconds less overall.
+                timeStart.setSeconds(timeStart.getSeconds() + 2);
+            });
+
+            // Whenever a bullet collides with a wall.
+            bullets.collide(walls, (bullet, wall) => {
+                // Just destroy the bullet, it shouldn't
+                // be playing with walls, anyway.
+                bullet.remove();
+            });
+
+            // Obstacles interactions.
             player.overlap(obstacles, (sprite, target) => {
                 levelLoaded = false;
                 restartLevel();
@@ -233,6 +266,26 @@ function Game() {
         text(seconds + "." + ms , WIDTH / 10, HEIGHT / 10);
     }
 
+    function fireBullet(direction) {
+        let bullet = createSprite(player.position.x + (direction * 5), player.position.y, 8, 8);
+        bullet.shapeColor = color(255, 61, 61);
+        // Go either right or left.
+        bullet.velocity.x = direction * 6;
+        // Setup what the 'draw' function should do with this Sprite.
+        bullet.behaviourFunc = (o) => {
+            o.collide(walls, (sprite, target) => {
+                o.remove();
+            });
+            o.collide(obstacles, (sprite, target) => {
+                timeStart.setSeconds(timeStart.getSeconds() + 2);
+                // scores[levelId] -= 10;
+                target.destroy();
+                o.destroy();
+            });
+        }
+        bullets.add(bullet);
+    }
+
     function restartLevel() {
         walls.removeSprites();
         obstacles.removeSprites();
@@ -252,7 +305,7 @@ function Game() {
         let timer = timeEnd - timeStart;
         let seconds = Math.floor((timer) / 1000);
         let ms = Math.floor(timer % 1000);
-        scores[levelId] = timer;
+        scores[levelId] += timer;
         textToDraw = [{
             fill: [255, 255, 255],
             textSize: 60,
@@ -269,10 +322,13 @@ function Game() {
         end.remove();
         walls.removeSprites();
         obstacles.removeSprites();
+        bullets.removeSprites();
         while (walls.length > 0)
             walls[0].remove();
         while (obstacles.length > 0)
             obstacles[0].remove();
+        while (bullets.length > 0)
+            bullets[0].remove();
     }
 
     function drawText() {
@@ -292,7 +348,7 @@ function Game() {
         }
     }
 
-    function getNickname(){
+    function getNickname() {
         let exp = /^[a-z0-9]+$/i;
         let nickname = prompt("Enter a nickname:");
         while (nickname == "" || nickname == null || nickname.length != 4 || nickname !== nickname.toUpperCase() || !nickname.match(exp)){
@@ -301,7 +357,7 @@ function Game() {
         return nickname;
     }
 
-    function endGame(){
+    function endGame() {
         let nickname = getNickname();
         let total = 0;
         for (let i = 1; i < levelId; i++){
@@ -319,7 +375,7 @@ function Game() {
         self.sceneManager.showScene(Leaderboard);
     }
 
-    function postScore(){
+    function postScore() { 
         var data = {
             userId: scores["userId"],
             score: scores["score"]
