@@ -84,7 +84,7 @@ describe("TESTING LEVEL " + levelId, function(){
             }
         }).on('close',function(){
             done();
-            //process.exit(0);
+            process.exit(0);
         });
     });
 });
