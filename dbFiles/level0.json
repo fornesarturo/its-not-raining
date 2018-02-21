@@ -1,4 +1,4 @@
-var level0 = {
+{
     "id": 0,
     "player": [
         300,
@@ -49,5 +49,3 @@ var level0 = {
         50
     ]
 }
-
-module.exports = level0;
