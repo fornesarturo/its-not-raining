@@ -295,12 +295,12 @@ function Game() {
     }
 
     function endGame(){
-        let nickname = getNickname();
         let total = 0;
         for (let i = 1; i < levelId; i++){
             total += scores[i];
         }
-        scores["userId"] = nickname;
+        self.sceneManager.showScene(Submit);
+        scores["userId"] = NICKNAME;
         scores["score"] = total;
         console.log(scores);
         postScore();
