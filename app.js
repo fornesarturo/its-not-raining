@@ -87,8 +87,14 @@ gameRouter.route('/score')
 		})
 	})
 	.post((req, res, next) => {
-		console.log(req.method, " ", (req.originalUrl || req.url), ": ", req.body);
-		saveScore(res, req.body);
+		if(process.env.TESTING_LEVEL) {
+			console.log("POSTING SCORE IN TEST WITH LEVEL ID: ", process.env.TESTING_LEVEL)
+			console.log(req.method, " ", (req.originalUrl || req.url), ": ", req.body);
+		}
+		else {
+			console.log(req.method, " ", (req.originalUrl || req.url), ": ", req.body);
+			saveScore(res, req.body);
+		}
 	});
 
 // DB Connections
