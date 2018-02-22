@@ -4,12 +4,13 @@
   "description": "Browser-based game",
   "main": "app.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha",
+    "test": "node_modules/.bin/mocha ./test/index.test.js",
     "start": "node app.js",
-    "feed-level": "node databaseScripts/feedLevel.js",
-    "get-level": "node databaseScripts/getLevel.js",
-    "feed-score": "node databaseScripts/feedScore.js",
-    "get-score": "node databaseScripts/getScore.js"
+    "test-level": "node_modules/.bin/mocha ./test/level.test.js",
+    "feed-level": "node dbScripts/feedLevel.js",
+    "get-level": "node dbScripts/getLevel.js",
+    "feed-score": "node dbScripts/feedScore.js",
+    "get-score": "node dbScripts/getScore.js"
   },
   "repository": {
     "type": "git",

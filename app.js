@@ -57,16 +57,25 @@ gameRouter.route('/')
 
 gameRouter.route('/getLevel')
 	.post((req, res, next) => {
-		console.log(req.method, " ", (req.originalUrl || req.url), " LevelID: ", req.body["id"]);
-		if (req.body["id"] >= 0) {
-			getLevel(req.body["id"]).then((level) => {
+		if(process.env.TESTING_LEVEL) {
+			console.log("REQUESTING LEVEL TEST WITH LEVEL ID: ", process.env.TESTING_LEVEL)
+			getLevel(process.env.TESTING_LEVEL).then((level) => {
 				res.json(level);
 				res.status(200);
 			});
-		} 	
+		}
 		else {
-			let level = getLevel(0);
-			res.json(level);
+			console.log(req.method, " ", (req.originalUrl || req.url), " LevelID: ", req.body["id"]);
+			if(req.body["id"] >= 0) {
+				getLevel(req.body["id"]).then((level) => {
+					res.json(level);
+					res.status(200);
+				});
+			} 	
+			else {
+				let level = getLevel(0);
+				res.json(level);
+			}
 		}
 	});
 

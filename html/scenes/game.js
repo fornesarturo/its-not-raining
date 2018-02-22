@@ -118,7 +118,6 @@ function Game() {
                     player.shapeColor = color(192, 70, 26);
                 }
                 else if(key == "text") {
-                    console.log("DRAW NEEDED");
                     textToDraw = res[key];
                 }
             }
@@ -294,6 +293,14 @@ function Game() {
         reset(currentLevel);
     }
 
+    function forcedRestartLevel() {
+        walls.removeSprites();
+        obstacles.removeSprites();
+        clearSprites();
+        let data = { "id": levelId };
+        loadLevel(data);
+    }
+
     function levelEnd() {
         let timer = timeEnd - timeStart;
         let seconds = Math.floor((timer) / 1000);
@@ -387,5 +394,14 @@ function Game() {
         .then(res => {
             console.log(res);
         });
+    }
+
+    this.keyPressed = () => {
+        switch(keyCode) {
+            case CONTROL:
+                // Force reloading.
+                forcedRestartLevel();
+                break;
+        }
     }
 }
