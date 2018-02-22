@@ -30,7 +30,11 @@ function Menu() {
             case '2':
                 // Load the Leaderboard scene.
                 this.sceneManager.showScene(Leaderboard); 
-                break;   
+                break;
+            case '3':
+                // Load the Leaderboard scene.
+                this.sceneManager.showScene(Lore); 
+                break;  
         }
     }
 
@@ -56,5 +60,8 @@ function Menu() {
     
         textSize(40);
         text("> Press '2' for leaderboard", 0, 750);
+
+        textSize(40);
+        text("> Press '3' to read the Lore", 0, 850);
     }
 }

@@ -24,6 +24,7 @@ function setup() {
     mgr.addScene(Game);
     mgr.addScene(Leaderboard);
     mgr.addScene(Submit);
+    mgr.addScene(Lore);
 
     // Create the 'raindrops' that will be drawn.
     for (var i = 0; i < 100; i++) {

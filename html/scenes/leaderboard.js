@@ -48,13 +48,13 @@ function Leaderboard() {
             strokeWeight(6);
             stroke(255);
             fill(0, 0);
-            rect(0, HEIGHT * 0.15, 600, 130);
+            rect(HEIGHT * 0.15, HEIGHT * 0.06, 650, 130);
 
             // Title
             fill(255);
             noStroke();
             textSize(80);
-            text("LEADERBOARD", 170, 150);
+            text("Leaderboard", HEIGHT * 0.25, 150);
             // Bottom hint to return to menu.
             textSize(30);
             text("> Press '1' to return", 60, 870);
