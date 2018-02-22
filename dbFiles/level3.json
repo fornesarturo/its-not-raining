@@ -1,0 +1,68 @@
+{
+    "id": 3,
+    "player": [100, 50],
+    "structures": [
+        [450, 0, 900, 50],
+        [450, 900, 900, 50],
+        [0, 450, 50, 850],
+        [900, 450, 50, 850],
+
+        [450, 890, 950, 50],
+        [75, 150, 100, 25],
+        [113, 514, 25, 702],
+        [600, 415, 25, 780]
+    ],
+    "obstacles": [
+        {
+            "coordinates": [575, 200, 40, 40],
+            "setup": "(o) => { o.velocity.x = -10; }",
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.x *= -1; }); }"
+        },
+        {
+            "coordinates": [550, 275, 40, 40],
+            "setup": "(o) => { o.velocity.x = -10; }",
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.x *= -1; }); }"
+        },
+        {
+            "coordinates": [525, 350, 40, 40],
+            "setup": "(o) => { o.velocity.x = -10; }",
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.x *= -1; }); }"
+        },
+        {
+            "coordinates": [500, 425, 40, 40],
+            "setup": "(o) => { o.velocity.x = -10; }",
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.x *= -1; }); }"
+        },
+        {
+            "coordinates": [475, 500, 40, 40],
+            "setup": "(o) => { o.velocity.x = -10; }",
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.x *= -1; }); }"
+        },
+        {
+            "coordinates": [450, 575, 40, 40],
+            "setup": "(o) => { o.velocity.x = -10; }",
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.x *= -1; }); }"
+        },
+        {
+            "coordinates": [425, 650, 40, 40],
+            "setup": "(o) => { o.velocity.x = -10; }",
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.x *= -1; }); }"
+        },
+        {
+            "coordinates": [400, 725, 40, 40],
+            "setup": "(o) => { o.velocity.x = -10; }",
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.x *= -1; }); }"
+        },
+        {
+            "coordinates": [375, 800, 40, 40],
+            "setup": "(o) => { o.velocity.x = -10; }",
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.x *= -1; }); }"
+        },
+        {
+            "coordinates": [700, 100, 40, 40],
+            "setup": "(o) => { o.velocity.y = -10; }",
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.y *= -1; }); }"
+        }
+    ],
+    "end": [800, 75, 35, 35]
+}
