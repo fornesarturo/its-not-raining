@@ -44,6 +44,17 @@ function reloadLevel() {
     });
 }
 
+function dropAndReload() {
+    levelModel.collection.drop((err) => {
+        let level = JSON.parse(fs.readFileSync(pathLevel));
+        let levelInstance = new levelModel(level);
+        levelInstance.save((err) => {
+            if(err) console.log("Error on beforeEach hook when saving to DB:\n", err);
+            else console.log("Uploading new level");
+        });
+    });
+}
+
 // Server start
 describe("WAITING FOR SERVER TO START BEFORE TESTS", function() {
     before(function(done) {
@@ -75,8 +86,7 @@ describe("TESTING LEVEL " + levelId, function(){
         rl.prompt();
         rl.on('line', (approval) => {
             if(approval == "r") {
-                dropLevel();
-                reloadLevel();
+                dropAndReload();
                 rl.prompt();
             }
             else if(approval == "q") {
