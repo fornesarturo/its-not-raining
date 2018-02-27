@@ -12,6 +12,12 @@ function Game() {
     // Margin
     const leftWall = 0;
     const rightWall = 899;
+    // Display text duration
+    const ENEMY_POINTS_DURATION = 1000;
+    // destroyed enemy array positions
+    const enemyPosX = 0;
+    const enemyPosY = 1;
+    const enemyKillTime = 2;
 
     // Level loading
     var levelLoaded, levelId;
@@ -31,6 +37,8 @@ function Game() {
     // Flags
     var direction, waitForMovement;
     var levelEnded;
+
+    var destroyedEnemies;
 
     // Store the current level that's being played
     // locally.
@@ -79,6 +87,7 @@ function Game() {
             return;
         }
         textToDraw = false;
+        destroyedEnemies = [];
         // Build from request response.
         for(var key in res) {
             if(res.hasOwnProperty(key)) {
@@ -143,6 +152,12 @@ function Game() {
             // Draw text if there's any.
             if (textToDraw)
                 drawText();
+
+            // Draw text when an enemy was destroyed
+            if (destroyedEnemies.length > 0)
+            {
+                drawEnemyText();
+            }
 
             if (!waitForMovement)
                 player.velocity.x = 0;
@@ -214,9 +229,17 @@ function Game() {
 
             // Whenever a bullet collides with an obstacle.
             bullets.collide(obstacles, (bullet, obstacle) => {
+                // Get obstacle pos before destroying it
+                let x = obstacle.position.x;
+                let y = obstacle.position.y;
+
                 // Destroy the bullet and the obstacle.
                 bullet.remove();
                 obstacle.remove();
+
+                // Set destroyed position and time
+                destroyedEnemies.push([x, y, millis() + ENEMY_POINTS_DURATION]);
+
                 // Add 2 seconds to the starting timer of the level,
                 // which results in having 2 seconds less overall.
                 timeStart.setSeconds(timeStart.getSeconds() + 2);
@@ -251,6 +274,23 @@ function Game() {
             if(!levelEnded)
                 timeEnd = new Date();
             updateTimer();
+        }
+    }
+
+    function drawEnemyText() {
+        textSize(30);
+        fill(255, 0, 0);
+
+        for (let i = 0; i < destroyedEnemies.length; i++)
+        {
+            if ( millis() < destroyedEnemies[i][enemyKillTime] )    
+            {
+                text("+ 10", destroyedEnemies[i][enemyPosX], destroyedEnemies[i][enemyPosY]);    
+            }
+            else
+            {
+                destroyedEnemies.splice(i, 1);
+            }
         }
     }
 
