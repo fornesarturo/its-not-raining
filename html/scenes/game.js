@@ -36,14 +36,12 @@ function Game() {
     // locally.
     var currentLevel;
 
-    var scores;
-
     this.enter = () => {
         // Groups for the sprites that function in the same way.
         walls = Group();
         obstacles = Group();
         bullets = Group();
-        scores = {};
+        SCORES = {};
         levelId = 1;
         levelLoaded = false;
         let data = { "id": levelId };
@@ -69,7 +67,7 @@ function Game() {
         .then(res => res.json())
         .then(resJSON => {
             currentLevel = resJSON;
-            scores[levelId] = 0;
+            SCORES[levelId] = 0;
             timeStart = new Date();
             reset(currentLevel);
         });
@@ -278,7 +276,7 @@ function Game() {
             });
             o.collide(obstacles, (sprite, target) => {
                 timeStart.setSeconds(timeStart.getSeconds() + 2);
-                // scores[levelId] -= 10;
+                // SCORES[levelId] -= 10;
                 target.destroy();
                 o.destroy();
             });
@@ -305,7 +303,7 @@ function Game() {
         let timer = timeEnd - timeStart;
         let seconds = Math.floor((timer) / 1000);
         let ms = Math.floor(timer % 1000);
-        scores[levelId] += timer;
+        SCORES[levelId] += timer;
         textToDraw = [{
             fill: [255, 255, 255],
             textSize: 60,
@@ -357,43 +355,16 @@ function Game() {
         return nickname;
     }
 
-    function endGame() {
-        let nickname = getNickname();
+    function endGame(){
         let total = 0;
         for (let i = 1; i < levelId; i++){
-            total += scores[i];
+            total += SCORES[i];
         }
-        scores["userId"] = nickname;
-        scores["score"] = total;
-        console.log(scores);
-        postScore();
+        SCORES["score"] = total;
         levelEnded = false;
-        scores = {};
         levelId = 1;
         levelLoaded = false;
-        let data = { "id" : levelId };
-        self.sceneManager.showScene(Leaderboard);
-    }
-
-    function postScore() { 
-        var data = {
-            userId: scores["userId"],
-            score: scores["score"]
-        }
-        var options = {
-            hostname: 'localhost',
-            port: 1337,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(data)
-        };
-        fetch("/score", options)
-        .then(res => {
-            console.log(res);
-        });
+        self.sceneManager.showScene(Submit);
     }
 
     this.keyPressed = () => {

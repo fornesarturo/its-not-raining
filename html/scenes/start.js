@@ -9,6 +9,9 @@ const HEIGHT = 900;
 // you, the player, is trying to stop.
 var drops = [];
 
+// To store the name of the player
+var SCORES = {};
+
 function setup() {
     createCanvas(WIDTH, HEIGHT);
 
@@ -20,6 +23,7 @@ function setup() {
     mgr.addScene(Menu);
     mgr.addScene(Game);
     mgr.addScene(Leaderboard);
+    mgr.addScene(Submit);
     mgr.addScene(Lore);
 
     // Create the 'raindrops' that will be drawn.
