@@ -59,7 +59,12 @@
             "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.x *= -1; }); }"
         },
         {
-            "coordinates": [700, 100, 40, 40],
+            "coordinates": [633, 100, 40, 40],
+            "setup": "(o) => { o.velocity.y = -10; }",
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.y *= -1; }); }"
+        },
+        {
+            "coordinates": [855, 800, 40, 40],
             "setup": "(o) => { o.velocity.y = -10; }",
             "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.y *= -1; }); }"
         }
