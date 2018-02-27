@@ -10,7 +10,7 @@ const HEIGHT = 900;
 var drops = [];
 
 // To store the name of the player
-var NICKNAME = "";
+var SCORES = {};
 
 function setup() {
     createCanvas(WIDTH, HEIGHT);

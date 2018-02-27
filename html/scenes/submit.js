@@ -7,11 +7,11 @@ function Submit() {
     this.enter = () => {
         // This function runs everytime one enters
         // the scene.
+        L = [null, "A", "A", "A", "A"];
+        current = 1;
     }
 
     this.setup = () => {
-        L = [null, "A", "A", "A", "A"];
-        current = 1;
     }
 
     this.draw = () => {
@@ -102,7 +102,30 @@ function Submit() {
     }
 
     function storeName(){
-        NICKNAME = L[1] + L[2] + L[3] + L[4];
-        self.sceneManager.showScene(Game);
+        let nickname = L[1] + L[2] + L[3] + L[4];
+        SCORES["userId"] = nickname;
+        postScore();
+        self.sceneManager.showScene(Leaderboard);
+    }
+
+    function postScore() { 
+        var data = {
+            userId: SCORES["userId"],
+            score: SCORES["score"]
+        }
+        var options = {
+            hostname: 'localhost',
+            port: 1337,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify(data)
+        };
+        fetch("/score", options)
+        .then(res => {
+            console.log(res);
+        });
     }
 }
