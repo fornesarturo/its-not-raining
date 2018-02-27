@@ -12,6 +12,8 @@ function Game() {
     // Margin
     const leftWall = 0;
     const rightWall = 899;
+    // Dsplay text duration
+    const ENEMY_POINTS_DURATION = 1000;
 
     // Level loading
     var levelLoaded, levelId;
@@ -31,6 +33,12 @@ function Game() {
     // Flags
     var direction, waitForMovement;
     var levelEnded;
+
+    var destroyedEnemy;
+    var endEnemyAnim;
+    var enemyDestroyedPosX;
+    var enemyDestroyedPosY;
+    
 
     // Store the current level that's being played
     // locally.
@@ -81,6 +89,7 @@ function Game() {
             return;
         }
         textToDraw = false;
+        destroyedEnemy = false;
         // Build from request response.
         for(var key in res) {
             if(res.hasOwnProperty(key)) {
@@ -145,6 +154,12 @@ function Game() {
             // Draw text if there's any.
             if (textToDraw)
                 drawText();
+
+            // Draw text when an enemy was destroyed
+            if (destroyedEnemy)
+            {
+                drawEnemyText();
+            }
 
             if (!waitForMovement)
                 player.velocity.x = 0;
@@ -216,9 +231,20 @@ function Game() {
 
             // Whenever a bullet collides with an obstacle.
             bullets.collide(obstacles, (bullet, obstacle) => {
+                // Get obstacle pos before destroying it
+                let x = obstacle.position.x;
+                let y = obstacle.position.y;
+
                 // Destroy the bullet and the obstacle.
                 bullet.remove();
                 obstacle.remove();
+
+                // Set destroyed position and time
+                enemyDestroyedPosX = x;
+                enemyDestroyedPosY = y;
+                endEnemyAnim = millis() + ENEMY_POINTS_DURATION;
+                destroyedEnemy = true;
+
                 // Add 2 seconds to the starting timer of the level,
                 // which results in having 2 seconds less overall.
                 timeStart.setSeconds(timeStart.getSeconds() + 2);
@@ -253,6 +279,20 @@ function Game() {
             if(!levelEnded)
                 timeEnd = new Date();
             updateTimer();
+        }
+    }
+
+    function drawEnemyText() {
+        textSize(30);
+        fill(255, 0, 0);
+
+        if (millis() < endEnemyAnim)
+        {
+            text("- 10", enemyDestroyedPosX, enemyDestroyedPosY);
+        }
+        else
+        {
+            destroyedEnemy = false;
         }
     }
 
