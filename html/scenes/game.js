@@ -12,8 +12,12 @@ function Game() {
     // Margin
     const leftWall = 0;
     const rightWall = 899;
-    // Dsplay text duration
+    // Display text duration
     const ENEMY_POINTS_DURATION = 1000;
+    // destroyed enemy array positions
+    const enemyPosX = 0;
+    const enemyPosY = 1;
+    const enemyKillTime = 2;
 
     // Level loading
     var levelLoaded, levelId;
@@ -34,11 +38,7 @@ function Game() {
     var direction, waitForMovement;
     var levelEnded;
 
-    var destroyedEnemy;
-    var endEnemyAnim;
-    var enemyDestroyedPosX;
-    var enemyDestroyedPosY;
-    
+    var destroyedEnemies;
 
     // Store the current level that's being played
     // locally.
@@ -89,7 +89,7 @@ function Game() {
             return;
         }
         textToDraw = false;
-        destroyedEnemy = false;
+        destroyedEnemies = [];
         // Build from request response.
         for(var key in res) {
             if(res.hasOwnProperty(key)) {
@@ -156,7 +156,7 @@ function Game() {
                 drawText();
 
             // Draw text when an enemy was destroyed
-            if (destroyedEnemy)
+            if (destroyedEnemies.length > 0)
             {
                 drawEnemyText();
             }
@@ -240,10 +240,7 @@ function Game() {
                 obstacle.remove();
 
                 // Set destroyed position and time
-                enemyDestroyedPosX = x;
-                enemyDestroyedPosY = y;
-                endEnemyAnim = millis() + ENEMY_POINTS_DURATION;
-                destroyedEnemy = true;
+                destroyedEnemies.push([x, y, millis() + ENEMY_POINTS_DURATION]);
 
                 // Add 2 seconds to the starting timer of the level,
                 // which results in having 2 seconds less overall.
@@ -286,13 +283,16 @@ function Game() {
         textSize(30);
         fill(255, 0, 0);
 
-        if (millis() < endEnemyAnim)
+        for (let i = 0; i < destroyedEnemies.length; i++)
         {
-            text("- 10", enemyDestroyedPosX, enemyDestroyedPosY);
-        }
-        else
-        {
-            destroyedEnemy = false;
+            if ( millis() < destroyedEnemies[i][enemyKillTime] )    
+            {
+                text("+ 10", destroyedEnemies[i][enemyPosX], destroyedEnemies[i][enemyPosY]);    
+            }
+            else
+            {
+                destroyedEnemies.splice(i, 1);
+            }
         }
     }
 
