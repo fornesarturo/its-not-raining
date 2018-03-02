@@ -296,6 +296,7 @@ function Game() {
 
     function updateTimer(){
         let timer = timeEnd - timeStart;
+        if (timer < 0) timeStart = new Date();
         let seconds = Math.floor((timer) / 1000);
         let ms = Math.floor(timer % 1000);
         // Add timer
