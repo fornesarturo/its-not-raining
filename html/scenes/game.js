@@ -310,31 +310,15 @@ function Game() {
         bullet.shapeColor = color(255, 61, 61);
         // Go either right or left.
         bullet.velocity.x = direction * 6;
-        // Setup what the 'draw' function should do with this Sprite.
-        bullet.behaviourFunc = (o) => {
-            o.collide(walls, (sprite, target) => {
-                o.remove();
-            });
-            o.collide(obstacles, (sprite, target) => {
-                timeStart.setSeconds(timeStart.getSeconds() + 2);
-                // SCORES[levelId] -= 10;
-                target.destroy();
-                o.destroy();
-            });
-        }
         bullets.add(bullet);
     }
 
     function restartLevel() {
-        walls.removeSprites();
-        obstacles.removeSprites();
         clearSprites();
         reset(currentLevel);
     }
 
     function forcedRestartLevel() {
-        walls.removeSprites();
-        obstacles.removeSprites();
         clearSprites();
         let data = { "id": levelId };
         loadLevel(data);
