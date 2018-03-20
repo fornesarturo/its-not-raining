@@ -1,34 +1,48 @@
 'use strict';
 
 process.env.NODE_ENV = "test";
-// Chai & Testing
-const chai = require("chai");
-const chaiHttp = require("chai-http");
-const app = require("../app");
-const should = chai.should();
-const expect = chai.expect;
-chai.use(chaiHttp);
+
+const common = require("./common.test");
+// App and functionalities
+const app = common.app;
+const fs = common.fs;
+// Chai
+const chai = common.chai;
+const expect = common.expect;
 // Models
-const mongoose = require("mongoose");
-const levelModel = require("../models/level");
-const scoreModel = require("../models/score");
+const mongoose = common.mongoose;
+const levelModel = common.models.levelModel;
+const scoreModel = common.models.scoreModel;
 // Samples
-const level1 = require("../databaseDocuments/level1");
-const scoreSample = require("../databaseDocuments/scoreSample");
+const level1 = JSON.parse(fs.readFileSync(common.samples.level1));
+const score0 = JSON.parse(fs.readFileSync(common.samples.score0));
+
+describe("WAITING FOR SERVER TO START BEFORE TESTS", function() {
+    before(function(done) {
+        console.log("\n\nFEED OF SETUP~~~~~~~~~~~~~~~~");
+        this.timeout(5000);
+        setTimeout(done, 4000)
+    })
+    it("SERVER STARTED", function(done) {
+        console.log("END OF SETUP~~~~~~~~~~~~~~~~~\n");
+        expect(true).to.be.true;
+        done();
+    })
+});
 
 describe("Static HTML", function() {
     it("Should return the html using GET", function(done) {
         chai.request(app)
         .get("/")
         .end(function(err, res){
-            res.should.have.status(200);
+            expect(res, "res doesn't deliver page").to.have.status(200);
             done();
         });
     });
 });
 
 describe("Levels", function() {
-    beforeEach(function(done) {
+    before(function(done) {
         this.timeout(4000);
         let levelInstance = new levelModel(level1);
         levelInstance.save((err) => {
@@ -36,7 +50,7 @@ describe("Levels", function() {
             done();
         });
     });
-    afterEach(function(done) {
+    after(function(done) {
         levelModel.collection.drop();
         done();
     });
@@ -78,7 +92,7 @@ describe("Scores", function() {
     it("Should upload a score using POST", function(done) {
         chai.request(app)
         .post("/score")
-        .send(scoreSample)
+        .send(score0)
         .end((err, res) => {
             expect(res, "Response code isn't 200").to.have.status(200);
             expect(res, "Response isn't JSON").to.be.json;
@@ -91,11 +105,11 @@ describe("Scores", function() {
     it("Should get all scores using GET", function(done) {
         chai.request(app)
         .get("/score")
-        .send(scoreSample)
+        .send(score0)
         .end((err, res) => {
             expect(res, "Response code isn't 200").to.have.status(200);
             expect(res, "Response isn't JSON").to.be.json;
-            expect(res.body, "Response body isn't JSON").to.be.a("array");
+            expect(res.body, "Response body isn't array").to.be.a("array");
             done();
         });
     });

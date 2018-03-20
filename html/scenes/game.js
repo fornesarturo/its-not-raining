@@ -12,6 +12,12 @@ function Game() {
     // Margin
     const leftWall = 0;
     const rightWall = 899;
+    // Display text duration
+    const ENEMY_POINTS_DURATION = 1000;
+    // destroyed enemy array positions
+    const enemyPosX = 0;
+    const enemyPosY = 1;
+    const enemyKillTime = 2;
 
     // Level loading
     var levelLoaded, levelId;
@@ -19,6 +25,8 @@ function Game() {
     var timeStart, timeEnd;
     // Sprites
     var player;
+    // Bullets
+    var bullets;
     // Structures
     var walls, end;
     // Obstacles and enemies
@@ -30,17 +38,18 @@ function Game() {
     var direction, waitForMovement;
     var levelEnded;
 
+    var destroyedEnemies;
+
     // Store the current level that's being played
     // locally.
     var currentLevel;
-
-    var scores;
 
     this.enter = () => {
         // Groups for the sprites that function in the same way.
         walls = Group();
         obstacles = Group();
-        scores = {};
+        bullets = Group();
+        SCORES = {};
         levelId = 1;
         levelLoaded = false;
         let data = { "id": levelId };
@@ -66,6 +75,7 @@ function Game() {
         .then(res => res.json())
         .then(resJSON => {
             currentLevel = resJSON;
+            SCORES[levelId] = 0;
             timeStart = new Date();
             reset(currentLevel);
         });
@@ -77,12 +87,14 @@ function Game() {
             return;
         }
         textToDraw = false;
+        destroyedEnemies = [];
         // Build from request response.
         for(var key in res) {
             if(res.hasOwnProperty(key)) {
                 if(key == "end") {
                     var endJSON = res[key];
                     end = createSprite(endJSON[0], endJSON[1], endJSON[2], endJSON[3]);
+                    end.shapeColor = color(40, 169, 183);
                 }
                 else if(key == "obstacles") {
                     var obstaclesJSON = res[key];
@@ -110,9 +122,9 @@ function Game() {
                     player = createSprite(playerJSON[0], playerJSON[1], 25, 25);
                     player.position.x = playerJSON[0];
                     player.position.y = playerJSON[1];
+                    player.shapeColor = color(192, 70, 26);
                 }
                 else if(key == "text") {
-                    console.log("DRAW NEEDED");
                     textToDraw = res[key];
                 }
             }
@@ -140,6 +152,12 @@ function Game() {
             // Draw text if there's any.
             if (textToDraw)
                 drawText();
+
+            // Draw text when an enemy was destroyed
+            if (destroyedEnemies.length > 0)
+            {
+                drawEnemyText();
+            }
 
             if (!waitForMovement)
                 player.velocity.x = 0;
@@ -199,7 +217,42 @@ function Game() {
                 }
             }
 
-            // Obstacles interactions
+            // Fire a bullet to the left.
+            if (keyWentDown("z")) {
+                fireBullet(-1);
+            }
+
+            // Fire a bullet to the right.
+            if (keyWentDown("x")) {
+                fireBullet(1);
+            }
+
+            // Whenever a bullet collides with an obstacle.
+            bullets.collide(obstacles, (bullet, obstacle) => {
+                // Get obstacle pos before destroying it
+                let x = obstacle.position.x;
+                let y = obstacle.position.y;
+
+                // Destroy the bullet and the obstacle.
+                bullet.remove();
+                obstacle.remove();
+
+                // Set destroyed position and time
+                destroyedEnemies.push([x, y, millis() + ENEMY_POINTS_DURATION]);
+
+                // Add 2 seconds to the starting timer of the level,
+                // which results in having 2 seconds less overall.
+                timeStart.setSeconds(timeStart.getSeconds() + 2);
+            });
+
+            // Whenever a bullet collides with a wall.
+            bullets.collide(walls, (bullet, wall) => {
+                // Just destroy the bullet, it shouldn't
+                // be playing with walls, anyway.
+                bullet.remove();
+            });
+
+            // Obstacles interactions.
             player.overlap(obstacles, (sprite, target) => {
                 levelLoaded = false;
                 restartLevel();
@@ -224,6 +277,23 @@ function Game() {
         }
     }
 
+    function drawEnemyText() {
+        textSize(30);
+        fill(255, 0, 0);
+
+        for (let i = 0; i < destroyedEnemies.length; i++)
+        {
+            if ( millis() < destroyedEnemies[i][enemyKillTime] )    
+            {
+                text("+ 10", destroyedEnemies[i][enemyPosX], destroyedEnemies[i][enemyPosY]);    
+            }
+            else
+            {
+                destroyedEnemies.splice(i, 1);
+            }
+        }
+    }
+
     function updateTimer(){
         let timer = timeEnd - timeStart;
         let seconds = Math.floor((timer) / 1000);
@@ -234,6 +304,26 @@ function Game() {
         text(seconds + "." + ms , WIDTH / 10, HEIGHT / 10);
     }
 
+    function fireBullet(direction) {
+        let bullet = createSprite(player.position.x + (direction * 5), player.position.y, 8, 8);
+        bullet.shapeColor = color(255, 61, 61);
+        // Go either right or left.
+        bullet.velocity.x = direction * 6;
+        // Setup what the 'draw' function should do with this Sprite.
+        bullet.behaviourFunc = (o) => {
+            o.collide(walls, (sprite, target) => {
+                o.remove();
+            });
+            o.collide(obstacles, (sprite, target) => {
+                timeStart.setSeconds(timeStart.getSeconds() + 2);
+                // SCORES[levelId] -= 10;
+                target.destroy();
+                o.destroy();
+            });
+        }
+        bullets.add(bullet);
+    }
+
     function restartLevel() {
         walls.removeSprites();
         obstacles.removeSprites();
@@ -241,11 +331,19 @@ function Game() {
         reset(currentLevel);
     }
 
+    function forcedRestartLevel() {
+        walls.removeSprites();
+        obstacles.removeSprites();
+        clearSprites();
+        let data = { "id": levelId };
+        loadLevel(data);
+    }
+
     function levelEnd() {
         let timer = timeEnd - timeStart;
         let seconds = Math.floor((timer) / 1000);
         let ms = Math.floor(timer % 1000);
-        scores[levelId] = timer;
+        SCORES[levelId] += timer;
         textToDraw = [{
             fill: [255, 255, 255],
             textSize: 60,
@@ -262,10 +360,13 @@ function Game() {
         end.remove();
         walls.removeSprites();
         obstacles.removeSprites();
+        bullets.removeSprites();
         while (walls.length > 0)
             walls[0].remove();
         while (obstacles.length > 0)
             obstacles[0].remove();
+        while (bullets.length > 0)
+            bullets[0].remove();
     }
 
     function drawText() {
@@ -285,7 +386,7 @@ function Game() {
         }
     }
 
-    function getNickname(){
+    function getNickname() {
         let exp = /^[a-z0-9]+$/i;
         let nickname = prompt("Enter a nickname:");
         while (nickname == "" || nickname == null || nickname.length != 4 || nickname !== nickname.toUpperCase() || !nickname.match(exp)){
@@ -295,41 +396,23 @@ function Game() {
     }
 
     function endGame(){
-        let nickname = getNickname();
         let total = 0;
         for (let i = 1; i < levelId; i++){
-            total += scores[i];
+            total += SCORES[i];
         }
-        scores["userId"] = nickname;
-        scores["score"] = total;
-        console.log(scores);
-        postScore();
+        SCORES["score"] = total;
         levelEnded = false;
-        scores = {};
         levelId = 1;
         levelLoaded = false;
-        let data = { "id" : levelId };
-        self.sceneManager.showScene(Leaderboard);
+        self.sceneManager.showScene(Submit);
     }
 
-    function postScore(){
-        var data = {
-            userId: scores["userId"],
-            score: scores["score"]
+    this.keyPressed = () => {
+        switch(keyCode) {
+            case CONTROL:
+                // Force reloading.
+                forcedRestartLevel();
+                break;
         }
-        var options = {
-            hostname: 'localhost',
-            port: 1337,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(data)
-        };
-        fetch("/score", options)
-        .then(res => {
-            console.log(res);
-        });
     }
 }
