@@ -136,7 +136,7 @@ function Game() {
                         let bWall = createSprite(index[0], index[1], index[2], index[3]);
                         bWall.shapeColor = color(252, 191, 106);
                         bounceObs.add(bWall);
-                        walls.add(bWall);
+                        //walls.add(bWall);
                     }
                 }
             }
@@ -228,6 +228,26 @@ function Game() {
                     player.velocity.y = -JUMP;
                 }
             }
+
+            player.collide(bounceObs, (sprite, target) => {
+                
+                if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
+                    // Do an automatic walljump
+                    if (direction < 0) {
+                        player.setSpeed(20, -55);
+                    } else {
+                        player.setSpeed(20, -125);
+                    }
+                }
+                else if (sprite.touching.bottom) {
+                    // jump
+                    player.velocity.y = -JUMP;
+                }
+                if (sprite.touching.top){
+                    // jump down
+                    player.velocity.y = JUMP;
+                }
+            });
 
             // Fire a bullet to the left.
             if (keyWentDown("z")) {
