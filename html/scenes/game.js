@@ -102,9 +102,16 @@ function Game() {
                     for(var i = 0; i < l; i++) {
                         index = obstaclesJSON[i].coordinates;
                         let obst = createSprite(index[0], index[1], index[2], index[3]);
-                        obst.shapeColor = color(255);
+                        console.log("COLOR: ", obstaclesJSON[i].colorFill);
+                        if(obstaclesJSON[i].colorFill) {
+                            obst.shapeColor = color(obstaclesJSON[i].colorFill);
+                        }
+                        else {
+                            obst.shapeColor = color(255);
+                        }
                         obst.setupFunc = eval(obstaclesJSON[i].setup);
                         obst.behaviourFunc = eval(obstaclesJSON[i].behaviour);
+                        obst.immune = obstaclesJSON[i].immune || false;
                         obstacles.add(obst);
                     }
                 }
@@ -229,20 +236,29 @@ function Game() {
 
             // Whenever a bullet collides with an obstacle.
             bullets.collide(obstacles, (bullet, obstacle) => {
-                // Get obstacle pos before destroying it
-                let x = obstacle.position.x;
-                let y = obstacle.position.y;
-
-                // Destroy the bullet and the obstacle.
+                //Destroy the bullet
                 bullet.remove();
-                obstacle.remove();
 
-                // Set destroyed position and time
-                destroyedEnemies.push([x, y, millis() + ENEMY_POINTS_DURATION]);
+                // If the obstacle can be destroyed
+                if(!obstacle.immune) {
+                    // Get obstacle pos before destroying it
+                    let x = obstacle.position.x;
+                    let y = obstacle.position.y;
 
-                // Add 2 seconds to the starting timer of the level,
-                // which results in having 2 seconds less overall.
-                timeStart.setSeconds(timeStart.getSeconds() + 2);
+                    // Destroy the obstacle.
+                    obstacle.remove();
+
+                    // Set destroyed position and time
+                    destroyedEnemies.push([x, y, millis() + ENEMY_POINTS_DURATION]);
+
+                    // Add 2 seconds to the starting timer of the level,
+                    // which results in having 2 seconds less overall.
+                    timeStart.setSeconds(timeStart.getSeconds() + 2);
+                }
+                else {
+                    console.log("HIT TO IMMUNE");
+                }
+                
             });
 
             // Whenever a bullet collides with a wall.
