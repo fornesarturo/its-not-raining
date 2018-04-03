@@ -30,7 +30,7 @@ function Game() {
     // Structures
     var walls, end;
     // Obstacles and enemies
-    var obstacles;
+    var obstacles, bounceObs;
     // Text
     var textToDraw;
 
@@ -49,6 +49,7 @@ function Game() {
         walls = Group();
         obstacles = Group();
         bullets = Group();
+        bounceObs = Group();
         SCORES = {};
         levelId = 1;
         levelLoaded = false;
@@ -126,6 +127,17 @@ function Game() {
                 }
                 else if(key == "text") {
                     textToDraw = res[key];
+                }
+                else if (key == "bounceObstacles") {
+                    var bounceObstJSON = res[key];
+                    var l = bounceObstJSON.length;
+                    for (var i = 0; i < l; i++) {
+                        index = bounceObstJSON[i];
+                        let bWall = createSprite(index[0], index[1], index[2], index[3]);
+                        bWall.shapeColor = color(252, 191, 106);
+                        bounceObs.add(bWall);
+                        walls.add(bWall);
+                    }
                 }
             }
         }
