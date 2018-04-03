@@ -25,7 +25,7 @@ function setup() {
     // From lib/scenemanager.js
     var mgr = new SceneManager();
     // .wire() connects the 'draw', 'mousePressed', and 
-    // 'keyPressed' events from P5. 
+    // 'keyPressed' events from P5.
     mgr.wire();
     mgr.addScene(Menu);
     mgr.addScene(Game);
