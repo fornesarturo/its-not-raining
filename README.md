@@ -8,17 +8,21 @@ You can play the game here, in [heroku](https://its-not-raining.herokuapp.com/).
 * [How to run](#how-to-run)
 * [License](#license)
 
-## Built with
-* [NodeJS](https://nodejs.org/)
+## Client built with
 * [p5.js](https://p5js.org/)
 * [p5.play](http://p5play.molleindustria.org/)
+* [p5.sound](https://p5js.org/reference/#/libraries/p5.sound)
+* [p5.scenemanager](https://github.com/mveteanu/p5.SceneManager)
+
+## Built with
+* [NodeJS](https://nodejs.org/)
+* [Express.js](http://expressjs.com/)
 * [MongoDB ATLAS](https://cloud.mongodb.com)
-* [Mongoose](http://mongoosejs.com/)
 
 ## Built with (Testing)
 * [Mocha](https://mochajs.org): Asynchronous testing.
 * [Chai](http://chaijs.com/): Assertion library.
-* [Chai-HTTP](https://github.com/chaijs/chai-http): Request app.js.
+* [Supertest](https://github.com/visionmedia/supertest): Requests testing.
 
 ## Authors
 * [Arturo Fornés Arvayo](http://github.com/fornesarturo)
