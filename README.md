@@ -13,11 +13,12 @@ You can play the game here, in [heroku](https://its-not-raining.herokuapp.com/).
 * [p5.js](https://p5js.org/)
 * [p5.play](http://p5play.molleindustria.org/)
 * [MongoDB ATLAS](https://cloud.mongodb.com)
+* [Mongoose](http://mongoosejs.com/)
 
 ## Built with (Testing)
 * [Mocha](https://mochajs.org): Asynchronous testing.
 * [Chai](http://chaijs.com/): Assertion library.
-* [Supertest](https://github.com/visionmedia/supertest): Requests testing.
+* [Chai-HTTP](https://github.com/chaijs/chai-http): Request app.js.
 
 ## Authors
 * [Arturo Fornés Arvayo](http://github.com/fornesarturo)
