@@ -6,7 +6,8 @@ const db = common.db;
 
 db.once('open', () => {
 
-    scoreModel.remove({userId: "TEST"}, (err) => {
+    // scoreModel.remove({score: {$lt: 20000, $gt: 10000}}, (err) => {
+    scoreModel.remove({userId: "as"}, (err) => {
         if(err) console.log(err);
         else console.log("REMOVED");
         mongoose.connection.close();
