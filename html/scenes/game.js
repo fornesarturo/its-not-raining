@@ -14,7 +14,7 @@ function Game() {
     const rightWall = 899;
     // Display text duration
     const ENEMY_POINTS_DURATION = 1000;
-    // destroyed enemy array positions
+    // Destroyed enemy array positions
     const enemyPosX = 0;
     const enemyPosY = 1;
     const enemyKillTime = 2;
@@ -56,9 +56,7 @@ function Game() {
         loadLevel(data);
     }
 
-    this.setup = () => {
-        
-    }
+    this.setup = () => { }
 
     function loadLevel(data) {
         var options = {
@@ -82,6 +80,8 @@ function Game() {
     }
 
     function reset(res) {
+        // When you've played the last level, the server responds with a 'null'
+        // when asked for the next level.
         if (res == null){
             endGame();
             return;
@@ -281,14 +281,11 @@ function Game() {
         textSize(30);
         fill(255, 0, 0);
 
-        for (let i = 0; i < destroyedEnemies.length; i++)
-        {
-            if ( millis() < destroyedEnemies[i][enemyKillTime] )    
-            {
-                text("+ 10", destroyedEnemies[i][enemyPosX], destroyedEnemies[i][enemyPosY]);    
+        for (let i = 0; i < destroyedEnemies.length; i++) {
+            if (millis() < destroyedEnemies[i][enemyKillTime]) {
+                text("- 2s", destroyedEnemies[i][enemyPosX], destroyedEnemies[i][enemyPosY]);    
             }
-            else
-            {
+            else {
                 destroyedEnemies.splice(i, 1);
             }
         }
@@ -296,6 +293,7 @@ function Game() {
 
     function updateTimer(){
         let timer = timeEnd - timeStart;
+        if (timer < 0) timeStart = new Date();
         let seconds = Math.floor((timer) / 1000);
         let ms = Math.floor(timer % 1000);
         // Add timer
@@ -309,31 +307,15 @@ function Game() {
         bullet.shapeColor = color(255, 61, 61);
         // Go either right or left.
         bullet.velocity.x = direction * 6;
-        // Setup what the 'draw' function should do with this Sprite.
-        bullet.behaviourFunc = (o) => {
-            o.collide(walls, (sprite, target) => {
-                o.remove();
-            });
-            o.collide(obstacles, (sprite, target) => {
-                timeStart.setSeconds(timeStart.getSeconds() + 2);
-                // SCORES[levelId] -= 10;
-                target.destroy();
-                o.destroy();
-            });
-        }
         bullets.add(bullet);
     }
 
     function restartLevel() {
-        walls.removeSprites();
-        obstacles.removeSprites();
         clearSprites();
         reset(currentLevel);
     }
 
     function forcedRestartLevel() {
-        walls.removeSprites();
-        obstacles.removeSprites();
         clearSprites();
         let data = { "id": levelId };
         loadLevel(data);
@@ -384,15 +366,6 @@ function Game() {
                     text(textInstance[0], textInstance[1], textInstance[2]);
             }
         }
-    }
-
-    function getNickname() {
-        let exp = /^[a-z0-9]+$/i;
-        let nickname = prompt("Enter a nickname:");
-        while (nickname == "" || nickname == null || nickname.length != 4 || nickname !== nickname.toUpperCase() || !nickname.match(exp)){
-            nickname = prompt("Please entera valid nickname:");
-        }
-        return nickname;
     }
 
     function endGame(){
