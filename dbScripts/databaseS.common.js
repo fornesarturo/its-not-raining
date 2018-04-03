@@ -1,9 +1,11 @@
-// Database requirements
 const dotenv = require('dotenv').config();
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const scoreModel = require('../models/score');
 const levelModel = require('../models/level');
 const config = require('../_config');
-// DB Setup
+const fs = require("fs");
+const path = require('path')
+
 mongoose.Promise = global.Promise;
 mongoose.connect(config.mongoURI["development"], (err) => {
 	if(err) {
@@ -14,18 +16,11 @@ mongoose.connect(config.mongoURI["development"], (err) => {
 	}
 });
 let db = mongoose.connection;
-
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-db.once('open', () => {
-    levelModel.find({}, (err, levelsS) => {
-        if(err) {
-            console.log(err);
-            mongoose.connection.close();
-        }
-        else {
-            console.log(levelsS);
-            mongoose.connection.close();
-        }
-    });
-});
+const models = {scoreModel:scoreModel, levelModel:levelModel};
+module.exports.mongoose = mongoose;
+module.exports.models = models;
+module.exports.db = db;
+module.exports.fs = fs;
+module.exports.path = path;

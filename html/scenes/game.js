@@ -12,6 +12,12 @@ function Game() {
     // Margin
     const leftWall = 0;
     const rightWall = 899;
+    // Display text duration
+    const ENEMY_POINTS_DURATION = 1000;
+    // destroyed enemy array positions
+    const enemyPosX = 0;
+    const enemyPosY = 1;
+    const enemyKillTime = 2;
 
     // Level loading
     var levelLoaded, levelId;
@@ -32,18 +38,18 @@ function Game() {
     var direction, waitForMovement;
     var levelEnded;
 
+    var destroyedEnemies;
+
     // Store the current level that's being played
     // locally.
     var currentLevel;
-
-    var scores;
 
     this.enter = () => {
         // Groups for the sprites that function in the same way.
         walls = Group();
         obstacles = Group();
         bullets = Group();
-        scores = {};
+        SCORES = {};
         levelId = 1;
         levelLoaded = false;
         let data = { "id": levelId };
@@ -69,7 +75,7 @@ function Game() {
         .then(res => res.json())
         .then(resJSON => {
             currentLevel = resJSON;
-            scores[levelId] = 0;
+            SCORES[levelId] = 0;
             timeStart = new Date();
             reset(currentLevel);
         });
@@ -81,6 +87,7 @@ function Game() {
             return;
         }
         textToDraw = false;
+        destroyedEnemies = [];
         // Build from request response.
         for(var key in res) {
             if(res.hasOwnProperty(key)) {
@@ -118,7 +125,6 @@ function Game() {
                     player.shapeColor = color(192, 70, 26);
                 }
                 else if(key == "text") {
-                    console.log("DRAW NEEDED");
                     textToDraw = res[key];
                 }
             }
@@ -146,6 +152,12 @@ function Game() {
             // Draw text if there's any.
             if (textToDraw)
                 drawText();
+
+            // Draw text when an enemy was destroyed
+            if (destroyedEnemies.length > 0)
+            {
+                drawEnemyText();
+            }
 
             if (!waitForMovement)
                 player.velocity.x = 0;
@@ -217,9 +229,17 @@ function Game() {
 
             // Whenever a bullet collides with an obstacle.
             bullets.collide(obstacles, (bullet, obstacle) => {
+                // Get obstacle pos before destroying it
+                let x = obstacle.position.x;
+                let y = obstacle.position.y;
+
                 // Destroy the bullet and the obstacle.
                 bullet.remove();
                 obstacle.remove();
+
+                // Set destroyed position and time
+                destroyedEnemies.push([x, y, millis() + ENEMY_POINTS_DURATION]);
+
                 // Add 2 seconds to the starting timer of the level,
                 // which results in having 2 seconds less overall.
                 timeStart.setSeconds(timeStart.getSeconds() + 2);
@@ -257,6 +277,23 @@ function Game() {
         }
     }
 
+    function drawEnemyText() {
+        textSize(30);
+        fill(255, 0, 0);
+
+        for (let i = 0; i < destroyedEnemies.length; i++)
+        {
+            if ( millis() < destroyedEnemies[i][enemyKillTime] )    
+            {
+                text("+ 10", destroyedEnemies[i][enemyPosX], destroyedEnemies[i][enemyPosY]);    
+            }
+            else
+            {
+                destroyedEnemies.splice(i, 1);
+            }
+        }
+    }
+
     function updateTimer(){
         let timer = timeEnd - timeStart;
         let seconds = Math.floor((timer) / 1000);
@@ -279,7 +316,7 @@ function Game() {
             });
             o.collide(obstacles, (sprite, target) => {
                 timeStart.setSeconds(timeStart.getSeconds() + 2);
-                // scores[levelId] -= 10;
+                // SCORES[levelId] -= 10;
                 target.destroy();
                 o.destroy();
             });
@@ -294,11 +331,19 @@ function Game() {
         reset(currentLevel);
     }
 
+    function forcedRestartLevel() {
+        walls.removeSprites();
+        obstacles.removeSprites();
+        clearSprites();
+        let data = { "id": levelId };
+        loadLevel(data);
+    }
+
     function levelEnd() {
         let timer = timeEnd - timeStart;
         let seconds = Math.floor((timer) / 1000);
         let ms = Math.floor(timer % 1000);
-        scores[levelId] += timer;
+        SCORES[levelId] += timer;
         textToDraw = [{
             fill: [255, 255, 255],
             textSize: 60,
@@ -350,42 +395,24 @@ function Game() {
         return nickname;
     }
 
-    function endGame() {
-        let nickname = getNickname();
+    function endGame(){
         let total = 0;
         for (let i = 1; i < levelId; i++){
-            total += scores[i];
+            total += SCORES[i];
         }
-        scores["userId"] = nickname;
-        scores["score"] = total;
-        console.log(scores);
-        postScore();
+        SCORES["score"] = total;
         levelEnded = false;
-        scores = {};
         levelId = 1;
         levelLoaded = false;
-        let data = { "id" : levelId };
-        self.sceneManager.showScene(Leaderboard);
+        self.sceneManager.showScene(Submit);
     }
 
-    function postScore() { 
-        var data = {
-            userId: scores["userId"],
-            score: scores["score"]
+    this.keyPressed = () => {
+        switch(keyCode) {
+            case CONTROL:
+                // Force reloading.
+                forcedRestartLevel();
+                break;
         }
-        var options = {
-            hostname: 'localhost',
-            port: 1337,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(data)
-        };
-        fetch("/score", options)
-        .then(res => {
-            console.log(res);
-        });
     }
 }
