@@ -17,6 +17,7 @@ var SOUNDS = {};
 
 function preload() {
     soundFormats('mp3');
+    // Music: www.bensound.com
     SOUNDS.backgroundMusic = loadSound('./../sounds/bensound-scifi.mp3');
 }
 
