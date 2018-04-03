@@ -5,11 +5,6 @@ const scoreModel = common.models.scoreModel;
 const db = common.db;
 
 db.once('open', () => {
-
-    // scoreModel.remove({userId: "Andres"}, (err) => {
-    //     if(err) console.log(err);
-    //     else console.log("REMOVED");
-    // });
     
     // scoreModel.update({"$or":
     //                     [{userId: "ANDB"}, 
@@ -26,11 +21,11 @@ db.once('open', () => {
     scoreModel.find({}, (err, scoresS) => {
         if(err) {
             console.log(err);
-            mongoose.connection.close();
         }
         else {
             console.log(scoresS);
-            mongoose.connection.close();
         }
+        mongoose.connection.close();
+        process.exit(0);    
     });
 });

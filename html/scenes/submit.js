@@ -67,20 +67,30 @@ function Submit() {
             current = max(current - 1, 1);
 
         if (keyWentDown("up"))
-            L[current] = String.fromCharCode(
-                min(
-                    L[current].charCodeAt(0) + 1,
-                    "Z".charCodeAt(0)
-                )
-            );
+            if (L[current] == 'Z'){
+                L[current] = 'A';
+            }
+            else {
+                L[current] = String.fromCharCode(
+                    min(
+                        L[current].charCodeAt(0) + 1,
+                        "Z".charCodeAt(0)
+                    )
+                );
+            }
 
         if (keyWentDown("down"))
-            L[current] = String.fromCharCode(
-                max(
-                    L[current].charCodeAt(0) - 1,
-                    "A".charCodeAt(0)
-                )
-            );
+            if (L[current] == 'A'){
+                L[current] = 'Z';
+            }
+            else {
+                L[current] = String.fromCharCode(
+                    max(
+                        L[current].charCodeAt(0) - 1,
+                        "A".charCodeAt(0)
+                    )
+                );
+            }
 
         if (keyWentDown("space"))
             storeName();
