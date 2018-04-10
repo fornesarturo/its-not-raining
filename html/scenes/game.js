@@ -63,7 +63,7 @@ function Game() {
     this.setup = () => { }
 
     function loadLevel(data) {
-        var options = {
+        let options = {
             hostname: 'localhost',
             port: 1337,
             headers: {
@@ -93,17 +93,17 @@ function Game() {
         textToDraw = false;
         destroyedEnemies = [];
         // Build from request response.
-        for(var key in res) {
+        for(let key in res) {
             if(res.hasOwnProperty(key)) {
                 if(key == "end") {
-                    var endJSON = res[key];
+                    let endJSON = res[key];
                     end = createSprite(endJSON[0], endJSON[1], endJSON[2], endJSON[3]);
                     end.shapeColor = color(40, 169, 183);
                 }
                 else if(key == "obstacles") {
-                    var obstaclesJSON = res[key];
-                    var l = obstaclesJSON.length;
-                    for(var i = 0; i < l; i++) {
+                    let obstaclesJSON = res[key];
+                    let l = obstaclesJSON.length;
+                    for(let i = 0; i < l; i++) {
                         index = obstaclesJSON[i].coordinates;
                         let obst = createSprite(index[0], index[1], index[2], index[3]);
                         console.log("COLOR: ", obstaclesJSON[i].colorFill);
@@ -120,16 +120,16 @@ function Game() {
                     }
                 }
                 else if(key == "structures") {
-                    var structuresJSON = res[key];
-                    var l = structuresJSON.length;
-                    for(var i = 0; i < l; i++) {
+                    let structuresJSON = res[key];
+                    let l = structuresJSON.length;
+                    for(let i = 0; i < l; i++) {
                         index = structuresJSON[i]
                         let wall = createSprite(index[0], index[1], index[2], index[3]);
                         walls.add(wall);
                     }
                 }
                 else if(key == "player") {
-                    var playerJSON = res[key];
+                    let playerJSON = res[key];
                     player = createSprite(playerJSON[0], playerJSON[1], 25, 25);
                     player.position.x = playerJSON[0];
                     player.position.y = playerJSON[1];
@@ -139,9 +139,9 @@ function Game() {
                     textToDraw = res[key];
                 }
                 else if (key == "bounceObstacles") {
-                    var bounceObstJSON = res[key];
-                    var l = bounceObstJSON.length;
-                    for (var i = 0; i < l; i++) {
+                    let bounceObstJSON = res[key];
+                    let l = bounceObstJSON.length;
+                    for (let i = 0; i < l; i++) {
                         index = bounceObstJSON[i];
                         let bWall = createSprite(index[0], index[1], index[2], index[3]);
                         bWall.shapeColor = color(252, 191, 106);
@@ -219,7 +219,8 @@ function Game() {
             //     }
             // }
 
-            player.collide(walls, (sprite, target) => {
+            player.overlap(walls, (sprite, target) => {
+                sprite.collide(target);
                 if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
                     player.velocity.y = WALL_GRAB;
                     direction = target.position.x - sprite.position.x;
