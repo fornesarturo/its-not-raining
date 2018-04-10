@@ -16,9 +16,11 @@ var SCORES = {};
 var SOUNDS = {};
 
 function preload() {
-    soundFormats('mp3');
+    soundFormats('mp3','ogg');
     // Music: www.bensound.com
     SOUNDS.backgroundMusic = loadSound('./../sounds/bensound-scifi.mp3');
+    // Sound Actor: Güereca
+    SOUNDS.pew = loadSound('./../sounds/pewGuereca.ogg');
 }
 
 function setup() {

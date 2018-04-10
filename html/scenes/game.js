@@ -319,6 +319,7 @@ function Game() {
     }
 
     function fireBullet(direction) {
+        SOUNDS.pew.play()
         let bullet = createSprite(player.position.x + (direction * 5), player.position.y, 8, 8);
         bullet.shapeColor = color(255, 61, 61);
         // Go either right or left.
