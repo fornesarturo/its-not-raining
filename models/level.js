@@ -14,7 +14,9 @@ var levelSchema = new Schema({
     obstacles: [{
         coordinates: [Number],
         setup: String,
-        behaviour: String
+        behaviour: String,
+        immune: Boolean,
+        colorFill: String
     }],
     end: {
         type: [Number],
