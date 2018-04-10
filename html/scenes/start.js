@@ -28,6 +28,9 @@ function preload() {
     SOUNDS.enemyDeath.setVolume(0.3);
     // Sound Actor: Martell
     SOUNDS.jump = loadSound('./../sounds/jumpMartell.ogg');
+    // Sound Actor: Hermes
+    SOUNDS.bounce = loadSound('./../sounds/hermesBong.ogg');
+    SOUNDS.bounce.setVolume(0.3);
 }
 
 function setup() {

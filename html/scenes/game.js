@@ -226,11 +226,10 @@ function Game() {
             if (keyWentDown("space")) {
                 if ((player.touching.left || player.touching.right) && !player.touching.bottom) {
                     waitForMovement = true;
+                    SOUNDS.jump.play();
                     if (direction < 0) {
-                        SOUNDS.jump.play();
                         player.setSpeed(20, -55);
                     } else {
-                        SOUNDS.jump.play();
                         player.setSpeed(20, -125);
                     }
                     ((me) => {
@@ -239,7 +238,7 @@ function Game() {
                                 waitForMovement = false;
                                 currentBounce = 0;
                             }
-                        }, 400);
+                        }, 200);
                     })(++currentBounce);
                 } else if (player.touching.bottom) {
                     SOUNDS.jump.play();
@@ -248,7 +247,7 @@ function Game() {
             }
 
             player.collide(bounceObs, (sprite, target) => {
-                
+                SOUNDS.bounce.play();
                 if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
                     // Do an automatic walljump
                     direction = target.position.x - sprite.position.x;
