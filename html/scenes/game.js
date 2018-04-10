@@ -31,6 +31,8 @@ function Game() {
     var walls, end;
     // Obstacles and enemies
     var obstacles, bounceObs;
+    // multiple bounce helper
+    var currentBounce;
     // Text
     var textToDraw;
 
@@ -136,7 +138,7 @@ function Game() {
                         let bWall = createSprite(index[0], index[1], index[2], index[3]);
                         bWall.shapeColor = color(252, 191, 106);
                         bounceObs.add(bWall);
-                        //walls.add(bWall);
+                        // walls.add(bWall);
                     }
                 }
             }
@@ -152,6 +154,7 @@ function Game() {
         timeEnd = new Date();
         levelLoaded = true;
         updateSprites(true);
+        currentBounce = 0;
     }
 
     this.draw = () => {
@@ -180,22 +183,22 @@ function Game() {
             if (player.position.x >= rightWall)
                 player.position.x = rightWall - 2;
 
-            // Basic Movement.
-            if (keyDown("left")) {
-                if (!waitForMovement)
-                    player.velocity.x = -SPEED;
-            }
-            if (keyDown("right")) {
-                if (!waitForMovement)
-                    player.velocity.x = SPEED;
-            }
+            // // Basic Movement.
+            // if (keyDown("left")) {
+            //     if (!waitForMovement)
+            //         player.velocity.x = -SPEED;
+            // }
+            // if (keyDown("right")) {
+            //     if (!waitForMovement)
+            //         player.velocity.x = SPEED;
+            // }
 
-            // Stop Movement.
-            if (keyWentUp("left") || keyWentUp("right")) {
-                if (!waitForMovement) {
-                    player.velocity.x = 0;
-                }
-            }
+            // // Stop Movement.
+            // if (keyWentUp("left") || keyWentUp("right")) {
+            //     if (!waitForMovement) {
+            //         player.velocity.x = 0;
+            //     }
+            // }
 
             player.collide(walls, (sprite, target) => {
                 if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
@@ -221,9 +224,14 @@ function Game() {
                     } else {
                         player.setSpeed(20, -125);
                     }
-                    setTimeout(() => {
-                        waitForMovement = false;
-                    }, 200);
+                    ((me) => {
+                        setTimeout(() => {
+                            if (me == currentBounce){
+                                waitForMovement = false;
+                                currentBounce = 0;
+                            }
+                        }, 400);
+                    })(++currentBounce);
                 } else if (player.touching.bottom) {
                     player.velocity.y = -JUMP;
                 }
@@ -233,11 +241,21 @@ function Game() {
                 
                 if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
                     // Do an automatic walljump
+                    direction = target.position.x - sprite.position.x;
+                    waitForMovement = true;
                     if (direction < 0) {
                         player.setSpeed(20, -55);
                     } else {
                         player.setSpeed(20, -125);
                     }
+                    ((me) => {
+                        setTimeout(() => {
+                            if (me == currentBounce){
+                                waitForMovement = false;
+                                currentBounce = 0;
+                            }
+                        }, 400);
+                    })(++currentBounce);
                 }
                 else if (sprite.touching.bottom) {
                     // jump
@@ -248,6 +266,16 @@ function Game() {
                     player.velocity.y = JUMP;
                 }
             });
+
+            // Basic Movement.
+            if (keyDown("left")) {
+                if (!waitForMovement)
+                    player.addSpeed(-SPEED, 0);
+            }
+            if (keyDown("right")) {
+                if (!waitForMovement)
+                    player.addSpeed(SPEED, 0);
+            }
 
             // Fire a bullet to the left.
             if (keyWentDown("z")) {
