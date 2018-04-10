@@ -193,7 +193,18 @@ function Game() {
                 drawEnemyText();
             }
 
-            if (!waitForMovement)
+            let iceTouched = player.collide(bonice, (sprite, target) => {
+                if (!keyDown("left") && !keyDown("right")){
+                    sprite.velocity.x *= 0.95;
+                }
+                else {
+                    player.velocity.x = 0;
+                }
+                if (sprite.touching.bottom) {
+                    sprite.velocity.y = 0.001;
+                }
+            });
+            if (!waitForMovement && !iceTouched)
                 player.velocity.x = 0;
 
             // Restric position outside of canvas
@@ -253,7 +264,7 @@ function Game() {
                             }
                         }, 200);
                     })(++currentBounce);
-                } else if (player.touching.bottom) {
+                } else if (player.touching.bottom || iceTouched) {
                     SOUNDS.jump.play();
                     player.velocity.y = -JUMP;
                 }
@@ -289,17 +300,17 @@ function Game() {
                 }
             });
 
-            player.collide(bonice, (sprite, target) => {
-                if (sprite.touching.bottom) {
-                    // "Reduce friction" effect
-                    sprite.velocity.y = 0.001;
-                    if (keyWentDown("space")) {
-                        SOUNDS.jump.play();
-                        player.velocity.y = -JUMP;
-                    }
-                    console.log("ice");
-                }
-            });
+            // player.collide(bonice, (sprite, target) => {
+            //     if (sprite.touching.bottom) {
+            //         // "Reduce friction" effect
+            //         sprite.velocity.y = 0.001;
+            //         if (keyWentDown("space")) {
+            //             SOUNDS.jump.play();
+            //             player.velocity.y = -JUMP;
+            //         }
+            //         console.log("ice");
+            //     }
+            // });
 
             // Basic Movement.
             if (keyDown("left")) {
