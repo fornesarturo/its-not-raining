@@ -30,7 +30,9 @@ function Game() {
     // Structures
     var walls, end;
     // Obstacles and enemies
-    var obstacles;
+    var obstacles, bounceObs;
+    // multiple bounce helper
+    var currentBounce;
     // Text
     var textToDraw;
 
@@ -49,6 +51,7 @@ function Game() {
         walls = Group();
         obstacles = Group();
         bullets = Group();
+        bounceObs = Group();
         SCORES = {};
         levelId = 1;
         levelLoaded = false;
@@ -134,6 +137,17 @@ function Game() {
                 else if(key == "text") {
                     textToDraw = res[key];
                 }
+                else if (key == "bounceObstacles") {
+                    var bounceObstJSON = res[key];
+                    var l = bounceObstJSON.length;
+                    for (var i = 0; i < l; i++) {
+                        index = bounceObstJSON[i];
+                        let bWall = createSprite(index[0], index[1], index[2], index[3]);
+                        bWall.shapeColor = color(252, 191, 106);
+                        bounceObs.add(bWall);
+                        // walls.add(bWall);
+                    }
+                }
             }
         }
 
@@ -147,6 +161,7 @@ function Game() {
         timeEnd = new Date();
         levelLoaded = true;
         updateSprites(true);
+        currentBounce = 0;
     }
 
     this.draw = () => {
@@ -175,22 +190,22 @@ function Game() {
             if (player.position.x >= rightWall)
                 player.position.x = rightWall - 2;
 
-            // Basic Movement.
-            if (keyDown("left")) {
-                if (!waitForMovement)
-                    player.velocity.x = -SPEED;
-            }
-            if (keyDown("right")) {
-                if (!waitForMovement)
-                    player.velocity.x = SPEED;
-            }
+            // // Basic Movement.
+            // if (keyDown("left")) {
+            //     if (!waitForMovement)
+            //         player.velocity.x = -SPEED;
+            // }
+            // if (keyDown("right")) {
+            //     if (!waitForMovement)
+            //         player.velocity.x = SPEED;
+            // }
 
-            // Stop Movement.
-            if (keyWentUp("left") || keyWentUp("right")) {
-                if (!waitForMovement) {
-                    player.velocity.x = 0;
-                }
-            }
+            // // Stop Movement.
+            // if (keyWentUp("left") || keyWentUp("right")) {
+            //     if (!waitForMovement) {
+            //         player.velocity.x = 0;
+            //     }
+            // }
 
             player.collide(walls, (sprite, target) => {
                 if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
@@ -216,12 +231,57 @@ function Game() {
                     } else {
                         player.setSpeed(20, -125);
                     }
-                    setTimeout(() => {
-                        waitForMovement = false;
-                    }, 200);
+                    ((me) => {
+                        setTimeout(() => {
+                            if (me == currentBounce){
+                                waitForMovement = false;
+                                currentBounce = 0;
+                            }
+                        }, 400);
+                    })(++currentBounce);
                 } else if (player.touching.bottom) {
                     player.velocity.y = -JUMP;
                 }
+            }
+
+            player.collide(bounceObs, (sprite, target) => {
+                
+                if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
+                    // Do an automatic walljump
+                    direction = target.position.x - sprite.position.x;
+                    waitForMovement = true;
+                    if (direction < 0) {
+                        player.setSpeed(20, -55);
+                    } else {
+                        player.setSpeed(20, -125);
+                    }
+                    ((me) => {
+                        setTimeout(() => {
+                            if (me == currentBounce){
+                                waitForMovement = false;
+                                currentBounce = 0;
+                            }
+                        }, 400);
+                    })(++currentBounce);
+                }
+                else if (sprite.touching.bottom) {
+                    // jump
+                    player.velocity.y = -JUMP;
+                }
+                if (sprite.touching.top){
+                    // jump down
+                    player.velocity.y = JUMP;
+                }
+            });
+
+            // Basic Movement.
+            if (keyDown("left")) {
+                if (!waitForMovement)
+                    player.addSpeed(-SPEED, 0);
+            }
+            if (keyDown("right")) {
+                if (!waitForMovement)
+                    player.addSpeed(SPEED, 0);
             }
 
             // Fire a bullet to the left.
@@ -244,6 +304,9 @@ function Game() {
                     // Get obstacle pos before destroying it
                     let x = obstacle.position.x;
                     let y = obstacle.position.y;
+
+                    // Play enemy death sound.
+                    SOUNDS.enemyDeath.play()
 
                     // Destroy the obstacle.
                     obstacle.remove();
@@ -360,12 +423,15 @@ function Game() {
         walls.removeSprites();
         obstacles.removeSprites();
         bullets.removeSprites();
+        bounceObs.removeSprites();
         while (walls.length > 0)
             walls[0].remove();
         while (obstacles.length > 0)
             obstacles[0].remove();
         while (bullets.length > 0)
             bullets[0].remove();
+        while (bounceObs.length > 0)
+            bounceObs[0].remove();
     }
 
     function drawText() {

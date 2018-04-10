@@ -21,6 +21,8 @@ function preload() {
     SOUNDS.backgroundMusic = loadSound('./../sounds/bensound-scifi.ogg');
     // Sound Actor: Güereca
     SOUNDS.pew = loadSound('./../sounds/pewGuereca.ogg');
+    // Sound from: SlykMrbyches
+    SOUNDS.enemyDeath = loadSound('./../sounds/slykmrbyches-splattt.ogg')
 }
 
 function setup() {
