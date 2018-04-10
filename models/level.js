@@ -11,6 +11,7 @@ var levelSchema = new Schema({
     },
     player: [Number], 
     structures: [[Number]],
+    bounceObstacles: [[Number]],
     obstacles: [{
         coordinates: [Number],
         setup: String,
