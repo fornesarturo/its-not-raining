@@ -267,11 +267,11 @@ function Game() {
                     })(++currentBounce);
                 }
                 else if (sprite.touching.bottom) {
-                    // jump
+                    // Bounce upwards when touching with the bottom of the player.
                     player.velocity.y = -JUMP;
                 }
                 if (sprite.touching.top){
-                    // jump down
+                    // Bounce downwards when touching with the top of the player.
                     player.velocity.y = JUMP;
                 }
             });
