@@ -18,6 +18,7 @@ db.once('open', () => {
 
     // });
 
+    // scoreModel.find({score: {$lt: 20000}}, (err, scoresS) => {
     scoreModel.find({}, (err, scoresS) => {
         if(err) {
             console.log(err);

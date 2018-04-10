@@ -1,13 +1,12 @@
 // Database requirements
 const common = require("./databaseS.common");
 const mongoose = common.mongoose;
-const scoreModel = common.models.scoreModel;
+const levelModel = common.models.levelModel;
 const db = common.db;
 
 db.once('open', () => {
 
-    // scoreModel.remove({score: {$lt: 20000, $gt: 10000}}, (err) => {
-    scoreModel.remove({userId: "as"}, (err) => {
+    levelModel.remove({id: "1"}, (err) => {
         if(err) console.log(err);
         else console.log("REMOVED");
         mongoose.connection.close();
