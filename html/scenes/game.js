@@ -387,6 +387,7 @@ function Game() {
     function restartLevel() {
         walls.removeSprites();
         obstacles.removeSprites();
+        bounceObs.removeSprites();
         clearSprites();
         reset(currentLevel);
     }
@@ -394,6 +395,7 @@ function Game() {
     function forcedRestartLevel() {
         walls.removeSprites();
         obstacles.removeSprites();
+        bounceObs.removeSprites();
         clearSprites();
         let data = { "id": levelId };
         loadLevel(data);
@@ -421,12 +423,15 @@ function Game() {
         walls.removeSprites();
         obstacles.removeSprites();
         bullets.removeSprites();
+        bounceObs.removeSprites();
         while (walls.length > 0)
             walls[0].remove();
         while (obstacles.length > 0)
             obstacles[0].remove();
         while (bullets.length > 0)
             bullets[0].remove();
+        while (bounceObs.length > 0)
+            bounceObs[0].remove();
     }
 
     function drawText() {
