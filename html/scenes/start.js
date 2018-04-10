@@ -19,10 +19,18 @@ function preload() {
     soundFormats('mp3','ogg');
     // Music: www.bensound.com
     SOUNDS.backgroundMusic = loadSound('./../sounds/bensound-scifi.ogg');
+    SOUNDS.backgroundMusic.setVolume(0.3);
     // Sound Actor: Güereca
     SOUNDS.pew = loadSound('./../sounds/pewGuereca.ogg');
+    SOUNDS.pew.setVolume(0.1);
     // Sound from: SlykMrbyches
-    SOUNDS.enemyDeath = loadSound('./../sounds/slykmrbyches-splattt.ogg')
+    SOUNDS.enemyDeath = loadSound('./../sounds/slykmrbyches-splattt.ogg');
+    SOUNDS.enemyDeath.setVolume(0.3);
+    // Sound Actor: Martell
+    SOUNDS.jump = loadSound('./../sounds/jumpMartell.ogg');
+    // Sound Actor: Hermes
+    SOUNDS.bounce = loadSound('./../sounds/hermesBong.ogg');
+    SOUNDS.bounce.setVolume(0.3);
 }
 
 function setup() {

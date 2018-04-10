@@ -209,6 +209,7 @@ function Game() {
             if (keyWentDown("space")) {
                 if ((player.touching.left || player.touching.right) && !player.touching.bottom) {
                     waitForMovement = true;
+                    SOUNDS.jump.play();
                     if (direction < 0) {
                         player.setSpeed(20, -55);
                     } else {
@@ -220,15 +221,16 @@ function Game() {
                                 waitForMovement = false;
                                 currentBounce = 0;
                             }
-                        }, 400);
+                        }, 200);
                     })(++currentBounce);
                 } else if (player.touching.bottom) {
+                    SOUNDS.jump.play();
                     player.velocity.y = -JUMP;
                 }
             }
 
             player.collide(bounceWalls, (sprite, target) => {
-                
+                SOUNDS.bounce.play();
                 if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
                     // Do an automatic walljump
                     direction = target.position.x - sprite.position.x;
@@ -248,11 +250,11 @@ function Game() {
                     })(++currentBounce);
                 }
                 else if (sprite.touching.bottom) {
-                    // jump
+                    // Bounce upwards when touching with the bottom of the player.
                     player.velocity.y = -JUMP;
                 }
                 if (sprite.touching.top){
-                    // jump down
+                    // Bounce downwards when touching with the top of the player.
                     player.velocity.y = JUMP;
                 }
             });
