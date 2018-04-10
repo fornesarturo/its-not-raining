@@ -245,6 +245,9 @@ function Game() {
                     let x = obstacle.position.x;
                     let y = obstacle.position.y;
 
+                    // Play enemy death sound.
+                    SOUNDS.enemyDeath.play()
+
                     // Destroy the obstacle.
                     obstacle.remove();
 
