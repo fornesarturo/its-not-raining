@@ -30,7 +30,7 @@ function Game() {
     // Structures
     var walls, end;
     // Obstacles and enemies
-    var obstacles, bounceObs;
+    var obstacles, bounceObs, bonice;
     // multiple bounce helper
     var currentBounce;
     // Text
@@ -52,6 +52,7 @@ function Game() {
         obstacles = Group();
         bullets = Group();
         bounceObs = Group();
+        bonice = Group();
         SCORES = {};
         levelId = 1;
         levelLoaded = false;
@@ -145,6 +146,17 @@ function Game() {
                         let bWall = createSprite(index[0], index[1], index[2], index[3]);
                         bWall.shapeColor = color(252, 191, 106);
                         bounceObs.add(bWall);
+                        // walls.add(bWall);
+                    }
+                }
+                else if (key == "ice") {
+                    var iceJSON = res[key];
+                    var l = iceJSON.length;
+                    for (var i = 0; i < l; i++) {
+                        index = iceJSON[i];
+                        let iceObj = createSprite(index[0], index[1], index[2], index[3]);
+                        iceObj.shapeColor = color(66, 244, 241);
+                        bonice.add(iceObj);
                         // walls.add(bWall);
                     }
                 }
@@ -273,6 +285,18 @@ function Game() {
                 if (sprite.touching.top){
                     // Bounce downwards when touching with the top of the player.
                     player.velocity.y = JUMP;
+                }
+            });
+
+            player.collide(bonice, (sprite, target) => {
+                if (sprite.touching.bottom) {
+                    // "Reduce friction" effect
+                    sprite.velocity.y = 0.001;
+                    if (keyWentDown("space")) {
+                        SOUNDS.jump.play();
+                        player.velocity.y = -JUMP;
+                    }
+                    console.log("ice");
                 }
             });
 
@@ -426,6 +450,7 @@ function Game() {
         obstacles.removeSprites();
         bullets.removeSprites();
         bounceObs.removeSprites();
+        bonice.removeSprites();
         while (walls.length > 0)
             walls[0].remove();
         while (obstacles.length > 0)
@@ -434,6 +459,8 @@ function Game() {
             bullets[0].remove();
         while (bounceObs.length > 0)
             bounceObs[0].remove();
+        while (bonice.length > 0)
+            bonice[0].remove();
     }
 
     function drawText() {
