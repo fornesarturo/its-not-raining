@@ -1,5 +1,5 @@
 {
-    "id": 3,
+    "id": 31,
     "player": [100, 50],
     "structures": [
         [450, 0, 900, 50],
@@ -11,9 +11,7 @@
         [113, 514, 25, 702],
         [600, 415, 25, 780],
         [620, 818, 64, 25],
-        [854, 818, 42, 25],
-        [658, 780, 11, 100],
-        [828, 780, 11, 100]
+        [854, 818, 42, 25]
 
     ],
     "obstacles": [
@@ -65,12 +63,16 @@
         {
             "coordinates": [632, 100, 40, 40],
             "setup": "(o) => { o.velocity.y = -10; }",
-            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.y *= -1; }); }"
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.y *= -1; }); }",
+            "immune": true,
+            "colorFill": "rgb(255, 204, 0)"
         },
         {
             "coordinates": [855, 800, 40, 40],
             "setup": "(o) => { o.velocity.y = -10; }",
-            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.y *= -1; }); }"
+            "behaviour": "(o) => { o.collide(walls, function(sprite, target) { sprite.velocity.y *= -1; }); }",
+            "immune": true,
+            "colorFill": "rgb(255, 204, 0)"
         }
     ],
     "end": [800, 75, 35, 35]
