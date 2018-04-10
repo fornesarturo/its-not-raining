@@ -212,14 +212,17 @@ function Game() {
                 if ((player.touching.left || player.touching.right) && !player.touching.bottom) {
                     waitForMovement = true;
                     if (direction < 0) {
+                        SOUNDS.jump.play();
                         player.setSpeed(20, -55);
                     } else {
+                        SOUNDS.jump.play();
                         player.setSpeed(20, -125);
                     }
                     setTimeout(() => {
                         waitForMovement = false;
                     }, 200);
                 } else if (player.touching.bottom) {
+                    SOUNDS.jump.play();
                     player.velocity.y = -JUMP;
                 }
             }
