@@ -30,7 +30,7 @@ function Game() {
     // Structures
     var walls, end;
     // Obstacles and enemies
-    var obstacles, bounceObs, bonice;
+    var obstacles, bounceWalls, bonice;
     // multiple bounce helper
     var currentBounce;
     // Text
@@ -51,8 +51,8 @@ function Game() {
         walls = Group();
         obstacles = Group();
         bullets = Group();
-        bounceObs = Group();
         bonice = Group();
+        bounceWalls = Group();
         SCORES = {};
         levelId = 1;
         levelLoaded = false;
@@ -145,7 +145,7 @@ function Game() {
                         index = bounceObstJSON[i];
                         let bWall = createSprite(index[0], index[1], index[2], index[3]);
                         bWall.shapeColor = color(252, 191, 106);
-                        bounceObs.add(bWall);
+                        bounceWalls.add(bWall);
                         // walls.add(bWall);
                     }
                 }
@@ -213,25 +213,7 @@ function Game() {
             if (player.position.x >= rightWall)
                 player.position.x = rightWall - 2;
 
-            // // Basic Movement.
-            // if (keyDown("left")) {
-            //     if (!waitForMovement)
-            //         player.velocity.x = -SPEED;
-            // }
-            // if (keyDown("right")) {
-            //     if (!waitForMovement)
-            //         player.velocity.x = SPEED;
-            // }
-
-            // // Stop Movement.
-            // if (keyWentUp("left") || keyWentUp("right")) {
-            //     if (!waitForMovement) {
-            //         player.velocity.x = 0;
-            //     }
-            // }
-
-            player.overlap(walls, (sprite, target) => {
-                sprite.collide(target);
+            player.collide(walls, (sprite, target) => {
                 if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
                     player.velocity.y = WALL_GRAB;
                     direction = target.position.x - sprite.position.x;
@@ -270,7 +252,7 @@ function Game() {
                 }
             }
 
-            player.collide(bounceObs, (sprite, target) => {
+            player.collide(bounceWalls, (sprite, target) => {
                 SOUNDS.bounce.play();
                 if ((sprite.touching.left || sprite.touching.right) && !sprite.touching.bottom) {
                     // Do an automatic walljump
@@ -368,11 +350,23 @@ function Game() {
                 // be playing with walls, anyway.
                 bullet.remove();
             });
+            
+            // Whenever a bullet collides with a bouncy wall.
+            bullets.collide(bounceWalls, (bullet, bounceWall) => {
+                // Just destroy the bullet, it shouldn't
+                // be playing with bouncy walls, anyway.
+                bullet.remove();
+            });
 
             // Obstacles interactions.
             player.overlap(obstacles, (sprite, target) => {
                 levelLoaded = false;
                 restartLevel();
+            });
+
+            // Obstacles collision with bouncy walls.
+            obstacles.collide(bounceWalls, function (sprite, target) { 
+                sprite.velocity.x *= -1; 
             });
 
             // Update obstacles
@@ -461,18 +455,18 @@ function Game() {
         walls.removeSprites();
         obstacles.removeSprites();
         bullets.removeSprites();
-        bounceObs.removeSprites();
         bonice.removeSprites();
+        bounceWalls.removeSprites();
         while (walls.length > 0)
             walls[0].remove();
         while (obstacles.length > 0)
             obstacles[0].remove();
         while (bullets.length > 0)
             bullets[0].remove();
-        while (bounceObs.length > 0)
-            bounceObs[0].remove();
         while (bonice.length > 0)
             bonice[0].remove();
+        while (bounceWalls.length > 0)
+            bounceWalls[0].remove();
     }
 
     function drawText() {
