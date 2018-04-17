@@ -15,6 +15,8 @@ var SCORES = {};
 // JSON to store various sounds to be used.
 var SOUNDS = {};
 
+var LANG = 'en';
+
 function preload() {
     soundFormats('mp3','ogg');
     // Music: www.bensound.com

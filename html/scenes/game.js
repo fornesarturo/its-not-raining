@@ -338,10 +338,6 @@ function Game() {
                     // which results in having 2 seconds less overall.
                     timeStart.setSeconds(timeStart.getSeconds() + 2);
                 }
-                else {
-                    console.log("HIT TO IMMUNE");
-                }
-                
             });
 
             // Whenever a bullet collides with a wall.
@@ -441,7 +437,7 @@ function Game() {
         textToDraw = [{
             fill: [255, 255, 255],
             textSize: 60,
-            texts: [["Level Cleared!\n" + seconds + "." + ms + "s", WIDTH/2 - 200, HEIGHT/2, 424, 1000]]
+            texts: [[STRINGS[LANG].levelCleared + "\n" + seconds + "." + ms + "s", WIDTH/2 - 200, HEIGHT/2, 424, 1000]]
         }];
         updateSprites(false);
         clearSprites();
