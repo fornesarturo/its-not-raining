@@ -4,7 +4,8 @@ process.env.NODE_ENV = "test";
 
 // Level to test
 const levelId = process.argv.slice(3)[0].substr(2);
-const pathLevel = __dirname + "/../dbFiles/level" + levelId + ".json";
+const pathLevel = __dirname + "/../dbFiles/level/level" + levelId + ".json";
+const pathLevelText = __dirname + "/../dbFiles/levelText/text" + levelId + ".json";
 
 // Setting up env to handle level testing
 process.env.TESTING_LEVEL = levelId;
@@ -19,6 +20,7 @@ const chai = common.chai;
 // Models
 const mongoose = common.mongoose;
 const levelModel = common.models.levelModel;
+const levelTextModel = common.models.levelTextModel;
 
 // Readline functionality
 const readline = require('readline');
@@ -33,15 +35,27 @@ function dropLevel() {
     levelModel.collection.drop((err) => {
         // NOTHING IS HANDLED
     });
+    levelTextModel.collection.drop((err) => {
+        // NOTHING IS HANDLED
+    });
 }
 // Function to re-upload level when request
 function reloadLevel() {
     let level = JSON.parse(fs.readFileSync(pathLevel));
     let levelInstance = new levelModel(level);
     levelInstance.save((err) => {
-        if(err) console.log("Error on beforeEach hook when saving to DB:\n", err);
-        else console.log("Uploading new level");
+        if(err) console.log("Error on beforeEach hook when saving level to DB:\n", err);
+        else console.log("Uploading new level (RELOAD)");
     });
+    if(level.text == true) {
+        let levelText = JSON.parse(fs.readFileSync(pathLevelText));
+        let levelTextInstance = new levelTextModel(levelText);
+        levelTextInstance.save((err) => {
+            if(err) console.log("Error on beforeEach hook when saving text to DB:\n", err);
+            else console.log("Uploading new text level (RELOAD)");
+        });
+        
+    }
 }
 
 function dropAndReload() {
@@ -49,9 +63,20 @@ function dropAndReload() {
         let level = JSON.parse(fs.readFileSync(pathLevel));
         let levelInstance = new levelModel(level);
         levelInstance.save((err) => {
-            if(err) console.log("Error on beforeEach hook when saving to DB:\n", err);
-            else console.log("Uploading new level");
+            if(err) console.log("Error on beforeEach hook when saving level to DB:\n", err);
+            else console.log("Uploading new level (DROP&RELOAD)");
         });
+
+        if(level.text == true) {
+            levelTextModel.collection.drop((err) => {
+                let levelText = JSON.parse(fs.readFileSync(pathLevelText));
+                let levelTextInstance = new levelTextModel(levelText);
+                levelTextInstance.save((err) => {
+                    if(err) console.log("Error on beforeEach hook when saving text to DB:\n", err);
+                    else console.log("Uploading new text level (DROP&RELOAD)");
+                });
+            });
+        }
     });
 }
 

@@ -2,6 +2,7 @@ const dotenv = require('dotenv').config();
 const mongoose = require("mongoose");
 const scoreModel = require('../models/score');
 const levelModel = require('../models/level');
+const levelTextModel = require('../models/levelText');
 const config = require('../_config');
 const fs = require("fs");
 const path = require('path')
@@ -18,7 +19,7 @@ mongoose.connect(config.mongoURI["development"], (err) => {
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-const models = {scoreModel:scoreModel, levelModel:levelModel};
+const models = {scoreModel:scoreModel, levelModel:levelModel, levelTextModel:levelTextModel};
 module.exports.mongoose = mongoose;
 module.exports.models = models;
 module.exports.db = db;

@@ -1,0 +1,43 @@
+{
+    "id": 1,
+    "en": [
+        {
+            "fill": [ 255, 255, 255 ],
+            "textSize": 15,
+            "texts": [
+                [ "Move with ARROW KEYS", 90, 810, 120, 250 ],
+                [ "Jump with SPACE", 90, 765 ],
+                [ "Level ends here", 720, 90 ],
+                [ "Shoot with Z and X", 290, 230, 100, 200 ],
+                [ "If you hit an enemy, you get a time deduction", 410, 410, 140, 200 ]
+            ]
+        },
+        {
+            "fill": [ 255, 255, 255 ],
+            "textSize": 15,
+            "texts": [
+                [ "Jump when touching a wall and above the floor", 90, 630, 150, 300 ]
+            ]
+        }
+    ],
+    "es": [
+        {
+            "fill": [ 255, 255, 255 ],
+            "textSize": 15,
+            "texts": [
+                [ "Muevete con las TECLAS DE FLECHA", 90, 810, 120, 250 ],
+                [ "Salta con ESPACIO", 90, 765 ],
+                [ "El nivel acaba aquí", 720, 90 ],
+                [ "Dispara con Z y X", 290, 230, 100, 200 ],
+                [ "Si disparas a un enemigo, obtienes una deducción de tiempo", 410, 410, 140, 200 ]
+            ]
+        },
+        {
+            "fill": [ 255, 255, 255 ],
+            "textSize": 15,
+            "texts": [
+                [ "Salta cuando toques una pared o toques el suelo", 90, 630, 150, 300 ]
+            ]
+        }
+    ]
+}

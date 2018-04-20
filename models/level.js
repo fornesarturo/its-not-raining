@@ -24,11 +24,9 @@ var levelSchema = new Schema({
         type: [Number],
         required: true
     },
-    text: [{
-        fill: [Number],
-        textSize: Number,
-        texts: [[]]
-    }]
+    text: {
+        type: Boolean
+    }
 });
 
 // levelSchema

@@ -8,6 +8,7 @@
     "start": "node app.js",
     "test-level": "node_modules/.bin/mocha ./test/level.test.js",
     "feed-level": "node dbScripts/feedLevel.js",
+    "feed-levelText": "node dbScripts/feedLevelText.js",
     "get-level": "node dbScripts/getLevel.js",
     "feed-score": "node dbScripts/feedScore.js",
     "get-score": "node dbScripts/getScore.js",
