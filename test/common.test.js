@@ -11,6 +11,7 @@ chai.use(chaiHttp);
 const mongoose = require("mongoose");
 const levelModel = require("../models/level");
 const scoreModel = require("../models/score");
+const levelTextModel = require("../models/levelText");
 levelModel.collection.drop((err) => {
     if(err != null) {
         if(err.message == "ns not found") console.log("NOTHING TO DELETE IN LEVEL DB");
@@ -23,11 +24,19 @@ scoreModel.collection.drop((err) => {
         else console.log(err);
     }
 });
-const models = { levelModel: levelModel, scoreModel:scoreModel };
+levelTextModel.collection.drop((err) => {
+    if(err != null) {
+        if(err.message == "ns not found") console.log("NOTHING TO DELETE IN LEVEL TEXT DB");
+        else console.log(err);
+    }
+});
+
+const models = { levelModel: levelModel, scoreModel: scoreModel, levelTextModel: levelTextModel };
 // Samples
-const level1 = (__dirname + "/../dbFiles/level1.json");
+const level1 = (__dirname + "/../dbFiles/level/level1.json");
 const score0 = (__dirname + "/../dbFiles/score0.json");
-const samples = { level1: level1, score0:score0 };
+const text1 = (__dirname + "/../dbFiles/levelText/text1.json");
+const samples = { level1: level1, score0: score0, text1: text1 };
 
 module.exports.app = app;
 module.exports.fs = fs;
