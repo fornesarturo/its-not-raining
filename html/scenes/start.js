@@ -19,6 +19,9 @@ var LANG = 'en';
 
 function getLang() {
     let url = document.URL
+    if (url.indexOf('?') == -1) {
+        return 'en'
+    }
     let query = url.slice(url.indexOf('?') + 1)
     let queries = query.split('&')
     console.log(queries)
