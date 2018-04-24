@@ -5,7 +5,7 @@ const levelModel = common.models.levelModel;
 const db = common.db;
 
 db.once('open', () => {
-    levelModel.find({}, (err, levels) => {
+    levelModel.find({id: 4}, (err, levels) => {
         if(err) {
             console.log(err);
         }
