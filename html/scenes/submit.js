@@ -28,13 +28,13 @@ function Submit() {
         fill(255);
         noStroke();
         textSize(80);
-        text("ENTER YOUR NAME", WIDTH / 2.0, 150);
+        text(STRINGS[LANG].scoreTitle, WIDTH / 2.0, 150);
 
         textAlign(CENTER, CENTER);
         fill(255);
         noStroke();
         textSize(80);
-        text("PRESS SPACE\nTO SUBMIT", WIDTH / 2.0, HEIGHT * (4/5));
+        text(STRINGS[LANG].scoreSubmit, WIDTH / 2.0, HEIGHT * (4/5));
 
         textAlign(CENTER, CENTER);
         fill(255);
