@@ -23,7 +23,7 @@ const STRINGS = {
         levelCleared: "¡Nivel completado!",
         loreTitle: "Historia",
         loreTitleWidth: 300,
-        lore: "En el reino de la flora, un espíritu de fuego, extranjero de estas tierras, sufre mientras los nativoso tratan de invocar una lluvia. Este espíritu, hecho de las llamas de la eternidad es débil ante la milenaria lluvia. Está en Peril of Drizzle.",
+        lore: "En el reino de la flora, un espíritu de fuego, extranjero de estas tierras, sufre mientras los nativoso tratan de invocar una lluvia. Este espíritu, hecho de las llamas de la eternidad es débil ante la milenaria lluvia. Está en Peligro de Llovizna.",
         scoreTitle: "PON TU NOMBRE",
         scoreSubmit: "PRESIONA ESPACIO\nPARA SUBIR"
     },
