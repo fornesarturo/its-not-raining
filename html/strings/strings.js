@@ -29,5 +29,18 @@ const STRINGS = {
     },
     "fr": {
 
-    }
+    },
+    "eo": {
+        pressToPlay: "> Premu '1' por ludi",
+        pressToLeaderboard: "> Premu '2' por vidi la poentarojn",
+        pressToLore: "> Premu '3' por legi la historion",
+        pressToReturn: "> Premu '1' por reveni",
+        leaderboardTitle: "Poentaroj",
+        levelCleared: "Nivelo kompletigita!",
+        loreTitle: "Historio",
+        loreTitleWidth: 350,
+        lore: "En la reĝlando de flaŭro, spirito de fajro, fremdulo el ĉi tiuj landoj, suferas dum la indiĝenoj provas invoki pluvon. Ĉi tiu spirito, farita el la flamoj de eterneco, estas malforta antaŭ la miljara pluvo. Ĝi estas en Peril de Pluvo.",
+        scoreTitle: "PUT VIA NOMO",
+        scoreSubmit: "GAZETARA SPACO\nPOR SUPRENIRI"
+    },
 }
