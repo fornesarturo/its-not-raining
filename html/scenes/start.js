@@ -29,7 +29,11 @@ function getLang() {
         let pair = i.split('=')
         if (pair.length != 2) continue
         if (pair[0] == 'lang') {
-            return pair[1]
+            if (pair[1].length == 2) {
+                return pair[1]
+            } else {
+                return 'en'
+            }
         }
     }
     return 'en'
