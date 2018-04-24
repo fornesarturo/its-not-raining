@@ -159,10 +159,7 @@ function Game() {
                         console.log("MUST ASK FOR TEXT");
                         loadText(res.id).then(
                             (textJSON) => {
-                                /*
-                                CHANGE HERE WHAT LANGUAGE TO LOAD
-                                */
-                                textToDraw = textJSON.en;
+                                textToDraw = textJSON[LANG];
                             }
                         );
                     }

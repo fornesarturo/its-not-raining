@@ -34,7 +34,7 @@ function Lore() {
         strokeWeight(6);
         stroke(255);
         fill(0, 0);
-        rect(0, HEIGHT * 0.165, 200, 100);
+        rect(0, HEIGHT * 0.165, STRINGS[LANG].loreTitleWidth, 100);
         
         // Title
         fill(255);
