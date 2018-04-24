@@ -54,10 +54,10 @@ function Leaderboard() {
             fill(255);
             noStroke();
             textSize(80);
-            text("Leaderboard", HEIGHT * 0.25, 150);
+            text(STRINGS[LANG].leaderboardTitle, HEIGHT * 0.25, 150);
             // Bottom hint to return to menu.
             textSize(30);
-            text("> Press '1' to return", 60, 870);
+            text(STRINGS[LANG].pressToReturn, 60, 870);
             // Leaderboard Table.
             textSize(50);
             for (let i = 0; i < leaderboardLength; i++) {

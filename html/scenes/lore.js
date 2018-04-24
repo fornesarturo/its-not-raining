@@ -40,13 +40,13 @@ function Lore() {
         fill(255);
         noStroke();
         textSize(80);
-        text("Lore", 0, 150);
+        text(STRINGS[LANG].loreTitle, 0, 150);
     
         textSize(40);
-        text("In the kingdom of the flora, a fire spirit, foreign to this land, suffers as the natives try to bring forth a drizzle. The fire spirit, made from the flames of eternity is weak to the millenary drizzle—duh. It's in Peril of Drizzle.", HEIGHT * 0.025, HEIGHT / 2, HEIGHT * 0.8, HEIGHT);
+        text(STRINGS[LANG].lore, HEIGHT * 0.025, HEIGHT / 2, HEIGHT * 0.8, HEIGHT);
 
         textSize(30);
-        text("> Press '1' to return", 0, 870);
+        text(STRINGS[LANG].pressToReturn, 0, 870);
     }
 }
 
