@@ -1,18 +1,18 @@
 const levelId = process.argv.slice(2)[0].substr(2);
-const pathLevel = __dirname + "/../dbFiles/level/level" + levelId + ".json";
+const pathLevel = __dirname + "/../dbFiles/levelText/text" + levelId + ".json";
 
 // Database requirements
 const common = require("./databaseS.common");
 const mongoose = common.mongoose;
-const levelModel = common.models.levelModel;
+const levelTextModel = common.models.levelTextModel;
 const db = common.db;
 const fs = common.fs;
 const data = JSON.parse(fs.readFileSync(pathLevel));
 db.once('open', () => {
     console.log("UPLOADING LEVEL:", levelId);
 
-    let levelInstance = new levelModel(data);
-    levelInstance.save((err) => {
+    let levelTextInstance = new levelTextModel(data);
+    levelTextInstance.save((err) => {
         if(err) {
             console.log(err);
         }

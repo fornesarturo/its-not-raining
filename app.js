@@ -24,6 +24,8 @@ app.use('/', gameRouter);
 // Models Setup
 var levelModel = require('./models/level');
 var scoreModel = require('./models/score');
+var levelTextModel = require('./models/levelText');
+
 // DB Setup
 mongoose.Promise = global.Promise;
 var envir = app.settings.env || "development";
@@ -79,6 +81,29 @@ gameRouter.route('/getLevel')
 		}
 	});
 
+gameRouter.route('/getLevelText')
+	.get((req, res, next) => {
+		if(process.env.TESTING_LEVEL) {
+			console.log("REQUESTING LEVEL TEXT TEST WITH LEVEL ID: ", process.env.TESTING_LEVEL)
+			getLevelText(process.env.TESTING_LEVEL).then((levelText) => {
+				res.json(levelText);
+				res.status(200);
+			});
+		}
+		else {
+			console.log(req.method, " ", (req.originalUrl || req.url), " LevelID: ", req.query["id"]);
+			if(req.query["id"] >= 0) {
+				getLevelText(req.query["id"]).then((levelText) => {
+					res.json(levelText);
+					res.status(200);
+				});
+			} 	
+			else {
+				res.status(404);
+			}
+		}
+	});
+
 gameRouter.route('/score')
 	.get((req, res, next) => {
 		console.log(req.method, " ", (req.originalUrl || req.url));
@@ -106,6 +131,16 @@ async function getLevel(idN) {
 		return levels[0];
 	});
 	return level;
+}
+
+async function getLevelText(idN) {
+	let levelText = await levelTextModel.find({id: idN}).exec().then((levels) => {
+		if (levels.length <= 0){
+			return null;
+		}
+		return levels[0];
+	});
+	return levelText;
 }
 
 async function getScores() {

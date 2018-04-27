@@ -62,7 +62,7 @@ function Game() {
 
     this.setup = () => { }
 
-    function loadLevel(data) {
+    async function loadLevel(data) {
         let options = {
             hostname: 'localhost',
             port: 1337,
@@ -73,13 +73,33 @@ function Game() {
             method: 'POST',
             body: JSON.stringify(data)
         };
-        fetch("/getLevel", options)
+        return await fetch("/getLevel", options)
         .then(res => res.json())
         .then(resJSON => {
             currentLevel = resJSON;
             SCORES[levelId] = 0;
             timeStart = new Date();
             reset(currentLevel);
+        });
+    }
+
+    async function loadText(id) {
+        let options = {
+            hostname: 'localhost',
+            port: 1337,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'GET',
+        };
+        let url = "/getLevelText?id=" + id;
+        return await fetch(url, options)
+        .then(res => {
+            return res.json()
+        })
+        .then(resJSON => {
+            return resJSON;
         });
     }
 
@@ -106,7 +126,6 @@ function Game() {
                     for(let i = 0; i < l; i++) {
                         index = obstaclesJSON[i].coordinates;
                         let obst = createSprite(index[0], index[1], index[2], index[3]);
-                        console.log("COLOR: ", obstaclesJSON[i].colorFill);
                         if(obstaclesJSON[i].colorFill) {
                             obst.shapeColor = color(obstaclesJSON[i].colorFill);
                         }
@@ -136,7 +155,15 @@ function Game() {
                     player.shapeColor = color(192, 70, 26);
                 }
                 else if(key == "text") {
-                    textToDraw = res[key];
+                    if(res[key] == true) {
+                        console.log("MUST ASK FOR TEXT");
+                        loadText(res.id).then(
+                            (textJSON) => {
+                                textToDraw = textJSON[LANG];
+                            }
+                        );
+                    }
+                    // textToDraw = res[key];
                 }
                 else if (key == "bounceObstacles") {
                     let bounceObstJSON = res[key];
@@ -338,10 +365,6 @@ function Game() {
                     // which results in having 2 seconds less overall.
                     timeStart.setSeconds(timeStart.getSeconds() + 2);
                 }
-                else {
-                    console.log("HIT TO IMMUNE");
-                }
-                
             });
 
             // Whenever a bullet collides with a wall.
@@ -441,7 +464,7 @@ function Game() {
         textToDraw = [{
             fill: [255, 255, 255],
             textSize: 60,
-            texts: [["Level Cleared!\n" + seconds + "." + ms + "s", WIDTH/2 - 200, HEIGHT/2, 424, 1000]]
+            texts: [[STRINGS[LANG].levelCleared + "\n" + seconds + "." + ms + "s", WIDTH/2 - 200, HEIGHT/2, 424, 1000]]
         }];
         updateSprites(false);
         clearSprites();

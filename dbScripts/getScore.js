@@ -29,4 +29,11 @@ db.once('open', () => {
         mongoose.connection.close();
         process.exit(0);    
     });
+
+    // scoreModel.collection.drop((err) => {
+    //     if(err != null) {
+    //         if(err.message == "ns not found") console.log("NOTHING TO DELETE IN SCORE DB");
+    //         else console.log(err);
+    //     }
+    // });
 });

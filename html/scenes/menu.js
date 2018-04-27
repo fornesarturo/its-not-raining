@@ -56,12 +56,12 @@ function Menu() {
         text("MENU", 0, HEIGHT * 0.4);
     
         textSize(40);
-        text("> Press '1' to play", 0, 650);
+        text(STRINGS[LANG].pressToPlay, 0, 650);
     
         textSize(40);
-        text("> Press '2' for leaderboard", 0, 750);
+        text(STRINGS[LANG].pressToLeaderboard, 0, 750);
 
         textSize(40);
-        text("> Press '3' to read the Lore", 0, 850);
+        text(STRINGS[LANG].pressToLore, 0, 850);
     }
 }

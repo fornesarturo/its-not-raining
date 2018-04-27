@@ -15,7 +15,33 @@ var SCORES = {};
 // JSON to store various sounds to be used.
 var SOUNDS = {};
 
+var LANG = 'en';
+
+function getLang() {
+    let url = document.URL
+    if (url.indexOf('?') == -1) {
+        return 'en'
+    }
+    let query = url.slice(url.indexOf('?') + 1)
+    let queries = query.split('&')
+    console.log(queries)
+    for (let i of queries) {
+        let pair = i.split('=')
+        if (pair.length != 2) continue
+        if (pair[0] == 'lang') {
+            if (pair[1].length == 2) {
+                return pair[1]
+            } else {
+                return 'en'
+            }
+        }
+    }
+    return 'en'
+}
+
 function preload() {
+    LANG = getLang()
+    console.log('LANG: ', LANG)
     soundFormats('mp3','ogg');
     // Music: www.bensound.com
     SOUNDS.backgroundMusic = loadSound('./../sounds/bensound-scifi.ogg');
